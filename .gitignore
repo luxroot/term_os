@@ -1,5 +1,11 @@
 *.o
 *.out
 *.exe
-./.gdb_history
+.gdb_history
+cmake_install.cmake
+.idea/*
 .vscode/*
+*.cbp
+CMakeFiles/*
+CMakeCache.txt
+cmake-build-debug/*
