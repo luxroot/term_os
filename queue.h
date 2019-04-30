@@ -6,7 +6,7 @@
 typedef struct _Queue{
     uint front;
     uint back;
-    PCptr* PClist;
+    procPtr* procList;
 } Queue;
 
 typedef Queue *Qptr;
@@ -15,5 +15,5 @@ void queue_init(Qptr);
 void queue_destroy(Qptr qptr);
 uint full(Qptr);
 uint empty(Qptr);
-void enque(Qptr, PCptr item);
-PCptr deque(Qptr);
+void enque(Qptr, procPtr item);
+procPtr deque(Qptr);

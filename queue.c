@@ -5,11 +5,11 @@
 void queue_init(Qptr qptr){
     qptr->back=0;
     qptr->front=0;
-    qptr->PClist=(PCptr)malloc(sizeof(PContainer)*QUEUE_CAPACIVITY);
+    qptr->procList=(procPtr*)malloc(sizeof(Process)*QUEUE_CAPACIVITY);
 }
 
 void queue_destroy(Qptr qptr){
-    free(qptr->PClist);
+    free(qptr->procList);
 }
 
 uint full(Qptr qptr){
@@ -30,19 +30,19 @@ uint empty(Qptr qptr){
     }
 }
 
-void enque(Qptr qptr, PCptr item){
-    qptr->PClist[qptr->back] = item;
+void enque(Qptr qptr, procPtr item){
+    qptr->procList[qptr->back] = item;
     (qptr->back)++;
     (qptr->back)%=QUEUE_CAPACIVITY;
 }
 
-PCptr deque(Qptr qptr){
+procPtr deque(Qptr qptr){
     if(qptr->front==0){
         qptr->front = QUEUE_CAPACIVITY-1;
-        return qptr->PClist[0];
+        return qptr->procList[0];
     }
     else{
         (qptr->front)++;
-        return qptr->PClist[(qptr->front)-1];
+        return qptr->procList[(qptr->front)-1];
     }
 }
