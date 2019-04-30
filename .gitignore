@@ -1,4 +1,5 @@
+*.o
 *.out
 *.exe
-
+./.gdb_history
 .vscode/*

@@ -1,4 +1,4 @@
-
+#pragma once
 typedef unsigned int uint;
 
 typedef struct _Process{
@@ -17,4 +17,6 @@ typedef struct _PContainer{
     uint quantum;
 } PContainer;
 
-void pContainer_init(PContainer* pc_ptr);
+typedef PContainer *PCptr;
+
+void pContainer_init(PCptr pc_ptr);

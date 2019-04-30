@@ -1,0 +1,19 @@
+#pragma once
+#include "process.h"
+
+#define QUEUE_CAPACIVITY 100
+
+typedef struct _Queue{
+    uint front;
+    uint back;
+    PCptr* PClist;
+} Queue;
+
+typedef Queue *Qptr;
+
+void queue_init(Qptr);
+void queue_destroy(Qptr qptr);
+uint full(Qptr);
+uint empty(Qptr);
+void enque(Qptr, PCptr item);
+PCptr deque(Qptr);
