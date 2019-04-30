@@ -1,5 +1,5 @@
 
-typedef uint unsigned int;
+typedef unsigned int uint;
 
 typedef struct _Process{
     uint pid;
