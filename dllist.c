@@ -45,3 +45,30 @@ void push_after(NodePtr beforePtr, NodePtr afterPtr){
     afterPtr->before = beforePtr;
 }
 
+NodePtr get_front(DLLptr dll){
+    return dll->nil.next;
+}
+
+NodePtr get_rear(DLLptr dll){
+    return dll->nil.before;
+}
+
+unsigned int get_size(DLLptr dll){
+    if(dll->nil.next == NULL){
+        return 0;
+    }
+    unsigned int size=1;
+    NodePtr cur = dll->nil.next;
+    while(cur->next != &dll->nil){
+        size++;
+        cur = cur->next;
+    }
+    return size;
+}
+
+NodePtr get_nth(DLLptr dll, unsigned int n){
+//    if(get_size(dll) <)
+//    int i=0;
+//    NodePtr cur = dll->nil.next;
+//    while(cur->next != )
+}

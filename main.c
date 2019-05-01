@@ -11,7 +11,7 @@ int main(int argc, char** argv){
     }
     int numOfProc=0;
     numOfProc = atoi(argv[1]);
-    printf("aa : %d\n",numOfProc);
+    printf("Processes number : %d\n",numOfProc);
 
 //    Process pc;
 //    process_init(&pc, 3);
@@ -30,10 +30,13 @@ int main(int argc, char** argv){
     a[1].value = 2;
     a[2].value = 5;
     a[3].value = 7;
+    printf("%u\n",get_size(&dll));
     push_rear(&dll, &a[2]);
+    printf("%u\n",get_size(&dll));
     push_rear(&dll, &a[1]);
     push_front(&dll, &a[0]);
     push_after(dll.nil.next, &a[3]);
+    printf("%u\n",get_size(&dll));
 
 
 
