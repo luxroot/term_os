@@ -1,9 +1,10 @@
 #ifndef TERM_DLLIST_H
 #define TERM_DLLIST_H
 
+typedef int Container;
 
 typedef struct _Node{
-    int value;
+    Container value;
     struct _Node* before;
     struct _Node* next;
 } Node;
@@ -11,7 +12,7 @@ typedef struct _Node{
 typedef Node *NodePtr;
 
 typedef struct _DLList{
-    NodePtr nil;
+    Node nil;
 }DLList;
 
 typedef DLList *DLLptr;
@@ -27,9 +28,9 @@ NodePtr pop_this(NodePtr);
 
 NodePtr get_front(DLLptr);
 NodePtr get_rear(DLLptr);
-NodePtr get_nth(DLLptr, uint);
+NodePtr get_nth(DLLptr, unsigned int);
 
-uint get_size(DLLptr);
+unsigned int get_size(DLLptr);
 
 
 #endif //TERM_DLLIST_H
