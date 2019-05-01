@@ -6,4 +6,5 @@ ADD_EXECUTABLE(term
         main.c
         process.c
         queue.c
+        dllist.c
         )
