@@ -30,15 +30,30 @@ int main(int argc, char** argv){
     a[1].value = 2;
     a[2].value = 5;
     a[3].value = 7;
-    printf("%u\n",get_size(&dll));
     push_rear(&dll, &a[2]);
-    printf("%u\n",get_size(&dll));
     push_rear(&dll, &a[1]);
     push_front(&dll, &a[0]);
     push_after(dll.nil.next, &a[3]);
-    printf("%u\n",get_size(&dll));
 
+    for(int i=0;i<get_size(&dll);i++){
+        printf("%d : %u\n",i,get_nth(&dll,(unsigned int)i)->value);
+    }
 
+    pop_front(&dll);
+    puts("");
+
+    for(int i=0;i<get_size(&dll);i++){
+        printf("%d : %u\n",i,get_nth(&dll,(unsigned int)i)->value);
+    }
+
+    pop_front(&dll);
+    pop_front(&dll);
+    pop_front(&dll);
+    puts("");
+
+    for(int i=0;i<get_size(&dll);i++){
+        printf("%d : %u\n",i,get_nth(&dll,(unsigned int)i)->value);
+    }
 
     return 0;
 }

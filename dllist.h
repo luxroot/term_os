@@ -32,5 +32,4 @@ NodePtr get_nth(DLLptr, unsigned int);
 
 unsigned int get_size(DLLptr);
 
-
 #endif //TERM_DLLIST_H

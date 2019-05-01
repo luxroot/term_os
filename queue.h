@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TERM_QUEUE_H
+#define TERM_QUEUE_H
+
 #include "process.h"
 
 #define QUEUE_CAPACIVITY 100
@@ -17,3 +19,6 @@ uint full(Qptr);
 uint empty(Qptr);
 void enque(Qptr, procPtr item);
 procPtr deque(Qptr);
+
+
+#endif //TERM_QUEUE_H
