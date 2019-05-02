@@ -18,9 +18,9 @@ typedef struct _Process{
 } Process;
 
 
-typedef Process *procPtr;
+typedef Process *ProcPtr;
 
-void process_init(procPtr, uint);
-void process_clean(procPtr);
+void process_init(ProcPtr, uint);
+void process_clean(ProcPtr);
 
 #endif //TERM_PROCESS_H

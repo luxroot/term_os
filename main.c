@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include "process.h"
 #include "queue.h"
 #include "dllist.h"
@@ -10,69 +13,52 @@ void print_dllist(DLLptr dll){
         return;
     }
     for(int i=0;i<get_size(dll);i++){
-        printf("%d : %u\n",i,get_nth(dll,(unsigned int)i)->value);
+        printf("%d : %u\n",i,get_nth(dll,(unsigned int)i)->value->pid);
     }
 }
 
 
 int main(int argc, char** argv){
+    // Error checking (invalid argc)
     if(argc < 2){
         fprintf(stderr,"usage : %s [number of processes]\n",argv[0]);
         exit(1);
     }
-//    int numOfProc=0;
-//    numOfProc = atoi(argv[1]);
-//    printf("Processes number : %d\n",numOfProc);
 
-//    Process pc;
-//    process_init(&pc, 3);
-//
-//    Queue qu;
-//    queue_init(&qu);
-//
-//    enque(&qu, &pc);
-//
-//    queue_destroy(&qu);
+    // Random seed
+    int rnd;
+    int rnd_fd = open("/dev/random", O_RDONLY);
+    read(rnd_fd, &rnd, sizeof(int));
+    srand(rnd);
+    close(rnd_fd);
 
+    // Initializing variables
+    unsigned int numOfProc = atoi(argv[1]);
+    unsigned int i;
 
     DLList dll;
-    DLList_init(&dll);
-    Node a[4];
-    a[0].value = 3;
-    a[1].value = 2;
-    a[2].value = 5;
-    a[3].value = 7;
-    push_back(&dll, &a[2]);
-    push_back(&dll, &a[1]);
-    push_front(&dll, &a[0]);
-    push_after(dll.nil.next, &a[3]);
+    DLLptr dllPtr = &dll;
+    DLList_init(dllPtr);
 
-    //// printing!!
-    print_dllist(&dll);
+    // Contains real process
+    ProcPtr procList = (ProcPtr) malloc(sizeof(Process) * numOfProc);
+    // Contains real node which has process pointer inside
+    NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
 
-    pop_front(&dll);
-    puts("");
+    for(i=0;i<numOfProc;i++){
+        // initialize with random variable, and pid of i (these variables must be constant after init)
+        process_init(&procList[i], i+1);
 
-    //// printing!!
-    print_dllist(&dll);
+        // cleans up used variable (these variables changes with scheduling algorithm)
+        process_clean(&procList[i]);
 
-    pop_front(&dll);
-    pop_back(&dll);
-    puts("");
+        // put Process pointer into nodeList
+        nodeList[i].value = &procList[i];
+    }
 
-    //// printing!!
-    print_dllist(&dll);
-
-    pop_back(&dll);
-    puts("");
-
-    //// printing!!
-    print_dllist(&dll);
-
-    push_back(&dll, &a[1]);
-
-    //// printing!!
-    print_dllist(&dll);
+    // Freeing dynamic allocated variables
+    free(procList);
+    free(nodeList);
 
     return 0;
 }

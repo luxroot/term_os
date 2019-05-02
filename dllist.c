@@ -38,6 +38,7 @@ void push_front(DLLptr dll, NodePtr nptr){
     }
 }
 
+// Push after exact locationi (using node pointer)
 void push_after(NodePtr beforePtr, NodePtr afterPtr){
     beforePtr->next->before = afterPtr;
     afterPtr->next = beforePtr->next;
@@ -66,6 +67,7 @@ unsigned int get_size(DLLptr dll){
     return size;
 }
 
+// Fetch nth node pointer of dl-list
 NodePtr get_nth(DLLptr dll, unsigned int index){
     if(get_size(dll) <= index){
         return NULL;
@@ -120,8 +122,11 @@ NodePtr pop_back(DLLptr dll){
     }
 }
 
+// Pop with Node pointer
 NodePtr pop_this(NodePtr cur){
+    // Empty pointer
     if(cur == NULL)   return NULL;
+    // There's only one node in dl list ( nil <-> cur <-> nil )
     else if(cur->before == cur->next){
         NodePtr nil=cur->before;
         nil->before = NULL;
@@ -138,6 +143,7 @@ NodePtr pop_this(NodePtr cur){
     }
 }
 
+// pop nth node using index
 NodePtr pop_nth(DLLptr dll, unsigned int index){
     unsigned int dll_size = get_size(dll);
     if(dll_size <= index){

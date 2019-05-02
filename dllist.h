@@ -1,7 +1,10 @@
+#include "process.h"
+
 #ifndef TERM_DLLIST_H
 #define TERM_DLLIST_H
 
-typedef int DLL_Container;
+
+typedef ProcPtr DLL_Container;
 
 typedef struct _Node{
     DLL_Container value;
