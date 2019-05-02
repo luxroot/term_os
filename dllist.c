@@ -49,7 +49,7 @@ NodePtr get_front(DLLptr dll){
     return dll->nil.next;
 }
 
-NodePtr get_rear(DLLptr dll){
+NodePtr get_back(DLLptr dll){
     return dll->nil.before;
 }
 

@@ -22,15 +22,16 @@ void push_back(DLLptr dll, NodePtr nptr);
 void push_front(DLLptr, NodePtr);
 void push_after(NodePtr, NodePtr);
 
+unsigned int get_size(DLLptr);
+
 NodePtr pop_front(DLLptr);
 NodePtr pop_back(DLLptr);
 NodePtr pop_this(NodePtr);
-NodePtr pop_nth(Dllptr, unsigned int);
+NodePtr pop_nth(DLLptr, unsigned int);
 
 NodePtr get_front(DLLptr);
-NodePtr get_rear(DLLptr);
+NodePtr get_back(DLLptr);
 NodePtr get_nth(DLLptr, unsigned int);
 
-unsigned int get_size(DLLptr);
 
 #endif //TERM_DLLIST_H
