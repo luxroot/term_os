@@ -18,12 +18,12 @@ typedef struct _DLList{
 typedef DLList *DLLptr;
 
 void DLList_init(DLLptr);
-void push_rear(DLLptr, NodePtr);
+void push_back(DLLptr dll, NodePtr nptr);
 void push_front(DLLptr, NodePtr);
 void push_after(NodePtr, NodePtr);
 
 NodePtr pop_front(DLLptr);
-NodePtr pop_rear(DLLptr);
+NodePtr pop_back(DLLptr);
 NodePtr pop_this(NodePtr);
 
 NodePtr get_front(DLLptr);

@@ -4,14 +4,25 @@
 #include "queue.h"
 #include "dllist.h"
 
+void print_dllist(DLLptr dll){
+    if(get_size(dll)==0){
+        puts("Empty!");
+        return;
+    }
+    for(int i=0;i<get_size(dll);i++){
+        printf("%d : %u\n",i,get_nth(dll,(unsigned int)i)->value);
+    }
+}
+
+
 int main(int argc, char** argv){
     if(argc < 2){
         fprintf(stderr,"usage : %s [number of processes]\n",argv[0]);
         exit(1);
     }
-    int numOfProc=0;
-    numOfProc = atoi(argv[1]);
-    printf("Processes number : %d\n",numOfProc);
+//    int numOfProc=0;
+//    numOfProc = atoi(argv[1]);
+//    printf("Processes number : %d\n",numOfProc);
 
 //    Process pc;
 //    process_init(&pc, 3);
@@ -30,30 +41,37 @@ int main(int argc, char** argv){
     a[1].value = 2;
     a[2].value = 5;
     a[3].value = 7;
-    push_rear(&dll, &a[2]);
-    push_rear(&dll, &a[1]);
+    push_back(&dll, &a[2]);
+    push_back(&dll, &a[1]);
     push_front(&dll, &a[0]);
     push_after(dll.nil.next, &a[3]);
 
-    for(int i=0;i<get_size(&dll);i++){
-        printf("%d : %u\n",i,get_nth(&dll,(unsigned int)i)->value);
-    }
+    //// printing!!
+    print_dllist(&dll);
 
     pop_front(&dll);
     puts("");
 
-    for(int i=0;i<get_size(&dll);i++){
-        printf("%d : %u\n",i,get_nth(&dll,(unsigned int)i)->value);
-    }
+    //// printing!!
+    print_dllist(&dll);
 
     pop_front(&dll);
-    pop_front(&dll);
-    pop_front(&dll);
+    pop_back(&dll);
     puts("");
 
-    for(int i=0;i<get_size(&dll);i++){
-        printf("%d : %u\n",i,get_nth(&dll,(unsigned int)i)->value);
-    }
+    //// printing!!
+    print_dllist(&dll);
+
+    pop_back(&dll);
+    puts("");
+
+    //// printing!!
+    print_dllist(&dll);
+
+    push_back(&dll, &a[1]);
+
+    //// printing!!
+    print_dllist(&dll);
 
     return 0;
 }

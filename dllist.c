@@ -8,7 +8,7 @@ void DLList_init(DLLptr dll){
     dll->nil.value = 0;
 }
 
-void push_rear(DLLptr dll, NodePtr nptr){
+void push_back(DLLptr dll, NodePtr nptr){
     if(dll->nil.before == NULL){
         dll->nil.next = nptr;
         dll->nil.before = nptr;
@@ -81,19 +81,41 @@ NodePtr pop_front(DLLptr dll){
     if(dll->nil.next == NULL)
         return NULL;
     else if(dll->nil.next == dll->nil.before){
-        DLLptr cur = dll->nil.next;
+        NodePtr cur = dll->nil.next;
         dll->nil.next = NULL;
         dll->nil.before = NULL;
+        cur->next = NULL;
+        cur->before = NULL;
         return cur;
     }
     else{
-        DLLptr cur = dll->nil.next;
-        dll->nil.next->before = &dll->nil;
+        NodePtr cur = dll->nil.next;
+        dll->nil.next->next->before = &dll->nil;
         dll->nil.next = dll->nil.next->next;
+        cur->next = NULL;
+        cur->before = NULL;
         return cur;
     }
 }
 
-//NodePtr pop_rear(){
-//    if(dll->)
-//}
+NodePtr pop_back(DLLptr dll){
+    if(dll->nil.before == NULL){
+        return NULL;
+    }
+    else if (dll->nil.next == dll->nil.before){
+        NodePtr cur = dll->nil.next;
+        dll->nil.next = NULL;
+        dll->nil.before = NULL;
+        cur->next = NULL;
+        cur->before = NULL;
+        return cur;
+    }
+    else{
+        NodePtr cur = dll->nil.before;
+        dll->nil.before->before->next = &dll->nil;
+        dll->nil.before = dll->nil.before->before;
+        cur->next = NULL;
+        cur->before = NULL;
+        return cur;
+    }
+}
