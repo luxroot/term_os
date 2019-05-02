@@ -34,6 +34,7 @@ int main(int argc, char** argv){
 //
 //    queue_destroy(&qu);
 
+
     DLList dll;
     DLList_init(&dll);
     Node a[4];

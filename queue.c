@@ -3,13 +3,16 @@
 #include <stdlib.h>
 
 void queue_init(Qptr qptr){
-    qptr->back=0;
-    qptr->front=0;
-    qptr->procList=(procPtr*)malloc(sizeof(Process)*QUEUE_CAPACIVITY);
+    qptr->back = 0;
+    qptr->front = 0;
+    qptr->procList = (Queue_Container*) malloc(sizeof(Queue_Container) * QUEUE_CAPACIVITY);
 }
 
 void queue_destroy(Qptr qptr){
     free(qptr->procList);
+    qptr->procList = NULL;
+    qptr->back = 0;
+    qptr->front = 0;
 }
 
 uint full(Qptr qptr){
@@ -33,11 +36,11 @@ uint empty(Qptr qptr){
 void enque(Qptr qptr, procPtr item){
     qptr->procList[qptr->back] = item;
     (qptr->back)++;
-    (qptr->back)%=QUEUE_CAPACIVITY;
+    (qptr->back) %= QUEUE_CAPACIVITY;
 }
 
-procPtr deque(Qptr qptr){
-    if(qptr->front==0){
+Queue_Container deque(Qptr qptr){
+    if(qptr->front == 0){
         qptr->front = QUEUE_CAPACIVITY-1;
         return qptr->procList[0];
     }

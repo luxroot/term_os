@@ -66,12 +66,12 @@ unsigned int get_size(DLLptr dll){
     return size;
 }
 
-NodePtr get_nth(DLLptr dll, unsigned int n){
-    if(get_size(dll) < n){
+NodePtr get_nth(DLLptr dll, unsigned int index){
+    if(get_size(dll) <= index){
         return NULL;
     }
     NodePtr cur = dll->nil.next;
-    while(n--){
+    while(index--){
         cur = cur->next;
     }
     return cur;
@@ -117,5 +117,39 @@ NodePtr pop_back(DLLptr dll){
         cur->next = NULL;
         cur->before = NULL;
         return cur;
+    }
+}
+
+NodePtr pop_this(NodePtr cur){
+    if(cur == NULL)   return NULL;
+    else if(cur->before == cur->next){
+        NodePtr nil=cur->before;
+        nil->before = NULL;
+        nil->next = NULL;
+        cur->before = NULL;
+        cur->next = NULL;
+        return cur;
+    }
+    else{
+        cur->before->next = cur->next;
+        cur->next->before = cur->before;
+        cur->next = NULL;
+        cur->before = NULL;
+    }
+}
+
+NodePtr pop_nth(DLLptr dll, unsigned int index){
+    unsigned int dll_size = get_size(dll);
+    if(dll_size <= index){
+        return NULL;
+    }
+    if(index == 0){
+        return pop_front(dll);
+    }
+    else if (index == dll_size-1){
+        return pop_back(dll);
+    }
+    else {
+        return pop_this(get_nth(dll, index));
     }
 }

@@ -1,10 +1,10 @@
 #ifndef TERM_DLLIST_H
 #define TERM_DLLIST_H
 
-typedef int Container;
+typedef int DLL_Container;
 
 typedef struct _Node{
-    Container value;
+    DLL_Container value;
     struct _Node* before;
     struct _Node* next;
 } Node;
@@ -25,6 +25,7 @@ void push_after(NodePtr, NodePtr);
 NodePtr pop_front(DLLptr);
 NodePtr pop_back(DLLptr);
 NodePtr pop_this(NodePtr);
+NodePtr pop_nth(Dllptr, unsigned int);
 
 NodePtr get_front(DLLptr);
 NodePtr get_rear(DLLptr);
