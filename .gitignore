@@ -3,6 +3,8 @@
 *.exe
 .gdb_history
 cmake_install.cmake
+term
+Makefile
 .idea/*
 .vscode/*
 *.cbp
