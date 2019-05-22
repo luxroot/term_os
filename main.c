@@ -7,16 +7,6 @@
 #include "queue.h"
 #include "dllist.h"
 
-void print_dllist(DLLptr dll){
-    if(get_size(dll)==0){
-        puts("Empty!");
-        return;
-    }
-    for(int i=0;i<get_size(dll);i++){
-        printf("%d : %u\n",i,get_nth(dll,(unsigned int)i)->value->pid);
-    }
-}
-
 
 int main(int argc, char** argv){
     // Error checking (invalid argc)
@@ -36,9 +26,9 @@ int main(int argc, char** argv){
     unsigned int numOfProc = atoi(argv[1]);
     unsigned int i;
 
-    DLList dll;
-    DLLptr dllPtr = &dll;
-    DLList_init(dllPtr);
+    DLList _jobs;
+    DLLptr jobs = &_jobs;
+    DLList_init(jobs);
 
     // Contains real process
     ProcPtr procList = (ProcPtr) malloc(sizeof(Process) * numOfProc);
@@ -49,12 +39,16 @@ int main(int argc, char** argv){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&procList[i], i+1);
 
-        // cleans up used variable (these variables changes with scheduling algorithm)
+        // initialize changing variables (these variables changes with scheduling algorithm)
         process_clean(&procList[i]);
 
         // put Process pointer into nodeList
         nodeList[i].value = &procList[i];
     }
+
+    // Do Scheduling
+
+
 
     // Freeing dynamic allocated variables
     free(procList);

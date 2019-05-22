@@ -16,10 +16,10 @@ typedef struct _Queue{
 typedef Queue *Qptr;
 
 void queue_init(Qptr);
-void queue_destroy(Qptr qptr);
+void queue_destroy(Qptr);
 uint full(Qptr);
 uint empty(Qptr);
-void enque(Qptr, Queue_Container item);
+void enque(Qptr, Queue_Container);
 Queue_Container deque(Qptr);
 
 

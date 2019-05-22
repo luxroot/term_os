@@ -25,7 +25,7 @@ typedef DLList *DLLptr;
 void DLList_init(DLLptr);
 unsigned int get_size(DLLptr);
 
-void push_back(DLLptr dll, NodePtr nptr);
+void push_back(DLLptr dll, NodePtr);
 void push_front(DLLptr, NodePtr);
 void push_after(NodePtr, NodePtr);
 
