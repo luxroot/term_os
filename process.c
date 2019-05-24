@@ -10,7 +10,7 @@ void process_clean(ProcPtr pc_ptr){
 
 void process_init(ProcPtr pc_ptr, uint pid){
     pc_ptr->pid = pid;
-    pc_ptr->cpu_burst = rand()  % 0x10;
+    pc_ptr->cpu_burst = rand()  % 0x10 + 3;
     pc_ptr->io_burst = rand()   % 0x10;
     pc_ptr->arrival = rand()    % 0x10;
     pc_ptr->priority = rand()   % 0x20;

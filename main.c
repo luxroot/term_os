@@ -8,6 +8,13 @@
 #include "dllist.h"
 #include "schedule.h"
 
+void printProc(ProcPtr procList, int n){
+    int i;
+    for(i=0;i<n;i++){
+        printf("pid : %d, arrival : %d, burst : %d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst);
+    }
+
+}
 
 int main(int argc, char** argv){
     // Error checking (invalid argc)
@@ -52,6 +59,17 @@ int main(int argc, char** argv){
     // Do Scheduling
     Chart chart={0};
 
+//    jobs->nil.next->value->arrival = 3;
+//    jobs->nil.next->next->value->arrival = 12;
+//    jobs->nil.next->next->next->value->arrival = 10;
+//
+//
+//    jobs->nil.next->value->cpu_burst = 1;
+//    jobs->nil.next->next->value->cpu_burst = 3;
+//    jobs->nil.next->next->next->value->cpu_burst = 3;
+
+    printProc(procList,numOfProc);
+
     do_FCFS(numOfProc, jobs, &chart);
 
     i=0;
@@ -60,6 +78,7 @@ int main(int argc, char** argv){
             break;
         }
         printf("Timeline : %d pid : %d\n",chart.timelines[i], chart.processes[i]);
+        i++;
     }
 
     // Freeing dynamic allocated variables
