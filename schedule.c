@@ -34,7 +34,7 @@ NodePtr do_FCFS(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
         // Push arrived tasks into waiting queue
         for(i=0;i<get_size(job_queue);i++){
             if(get_nth(job_queue,i)->value->arrival == current_time){
-                memcpy(nodeList[i].value, get_nth(job_queue,i)->value, sizeof(Process));
+                nodeList[node_index++].value = get_nth(job_queue,i)->value;
                 push_back(wq_ptr, &nodeList[i]);
                 pop_nth(job_queue,i);
             }
