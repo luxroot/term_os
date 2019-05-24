@@ -6,6 +6,7 @@
 #include "process.h"
 #include "queue.h"
 #include "dllist.h"
+#include "schedule.h"
 
 
 int main(int argc, char** argv){
@@ -44,11 +45,22 @@ int main(int argc, char** argv){
 
         // put Process pointer into nodeList
         nodeList[i].value = &procList[i];
+
+        push_back(jobs, &nodeList[i]);
     }
 
     // Do Scheduling
+    Chart chart={0};
 
+    do_FCFS(numOfProc, jobs, &chart);
 
+    i=0;
+    while(1){
+        if(chart.processes[i] == 0){
+            break;
+        }
+        printf("Timeline : %d pid : %d\n",chart.timelines[i], chart.processes[i]);
+    }
 
     // Freeing dynamic allocated variables
     free(procList);

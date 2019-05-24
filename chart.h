@@ -7,4 +7,6 @@ typedef struct _Chart{
     unsigned int processes[1000];
 }Chart;
 
+typedef Chart *ChartPtr;
+
 #endif //TERM_CHART_H

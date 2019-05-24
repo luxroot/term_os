@@ -38,7 +38,7 @@ void push_front(DLLptr dll, NodePtr nptr){
     }
 }
 
-// Push after exact locationi (using node pointer)
+// Push after exact location (using node pointer)
 void push_after(NodePtr beforePtr, NodePtr afterPtr){
     beforePtr->next->before = afterPtr;
     afterPtr->next = beforePtr->next;
@@ -60,7 +60,8 @@ unsigned int get_size(DLLptr dll){
     }
     unsigned int size=1;
     NodePtr cur = dll->nil.next;
-    while(cur->next != &dll->nil){
+    NodePtr nil = &dll->nil;
+    while(cur->next != nil){
         size++;
         cur = cur->next;
     }
