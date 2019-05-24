@@ -5,6 +5,7 @@
 cmake_install.cmake
 .idea/*
 .vscode/*
+.vs/*
 *.cbp
 CMakeFiles/*
 CMakeCache.txt
