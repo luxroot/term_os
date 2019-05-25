@@ -38,6 +38,8 @@ int main(int argc, char** argv){
     DLLptr jobs = &_jobs;
     DLList_init(jobs);
 
+    Chart chart={0};
+
     // Contains real process
     ProcPtr procList = (ProcPtr) malloc(sizeof(Process) * numOfProc);
     // Contains real node which has process pointer inside
@@ -46,31 +48,26 @@ int main(int argc, char** argv){
     for(i=0;i<numOfProc;i++){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&procList[i], i+1);
-        procList[i].arrival += rand() % (numOfProc * 5);
-        // initialize changing variables (these variables changes with scheduling algorithm)
-        process_clean(&procList[i]);
+        procList[i].arrival += rand() % (numOfProc * 15);
 
         // put Process pointer into nodeList
         nodeList[i].value = &procList[i];
 
         push_back(jobs, &nodeList[i]);
     }
-
-    // Do Scheduling
-    Chart chart={0};
-
-//    jobs->nil.next->value->arrival = 3;
-//    jobs->nil.next->next->value->arrival = 3;
-//    jobs->nil.next->next->next->value->arrival = 10;
-//
-//
-//    jobs->nil.next->value->cpu_burst = 1;
-//    jobs->nil.next->next->value->cpu_burst = 3;
-//    jobs->nil.next->next->next->value->cpu_burst = 3;
-
     printProc(procList,numOfProc);
 
+    // Do Scheduling
+
+    for(i=0;i<numOfProc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&procList[i]);
+        push_back(jobs, &nodeList[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
     do_FCFS(numOfProc, jobs, &chart);
+
     i=0;
     while(1){
         if(chart.processes[i] == 0){
@@ -79,6 +76,9 @@ int main(int argc, char** argv){
         printf("Timeline : %d ~ %d pid : %d\n", chart.start[i], chart.end[i], chart.processes[i]);
         i++;
     }
+    drawChart(&chart, numOfProc, 50);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
     for(i=0;i<numOfProc;i++){
         // initialize changing variables (these variables changes with scheduling algorithm)
@@ -86,6 +86,7 @@ int main(int argc, char** argv){
         push_back(jobs, &nodeList[i]);
     }
     memset(&chart, 0, sizeof(chart));
+
     do_nonpreemptive_SFJ(numOfProc, jobs, &chart);
 
     i=0;
@@ -96,6 +97,7 @@ int main(int argc, char** argv){
         printf("Timeline : %d ~ %d pid : %d\n", chart.start[i], chart.end[i], chart.processes[i]);
         i++;
     }
+    drawChart(&chart, numOfProc, 50);
 
 
     // Freeing dynamic allocated variables

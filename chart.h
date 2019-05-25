@@ -10,4 +10,6 @@ typedef struct _Chart{
 
 typedef Chart *ChartPtr;
 
+void drawChart(ChartPtr, unsigned int, unsigned int);
+
 #endif //TERM_CHART_H
