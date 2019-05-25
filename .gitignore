@@ -2,6 +2,8 @@
 *.out
 *.exe
 .gdb_history
+term
+Makefile
 cmake_install.cmake
 .idea/*
 .vscode/*
