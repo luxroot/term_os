@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "process.h"
 #include "queue.h"
@@ -13,7 +14,6 @@ void printProc(ProcPtr procList, int n){
     for(i=0;i<n;i++){
         printf("pid : %d, arrival : %d, burst : %d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst);
     }
-
 }
 
 int main(int argc, char** argv){
@@ -46,7 +46,7 @@ int main(int argc, char** argv){
     for(i=0;i<numOfProc;i++){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&procList[i], i+1);
-        procList[i].arrival += rand() % (numOfProc * 15);
+        procList[i].arrival += rand() % (numOfProc * 5);
         // initialize changing variables (these variables changes with scheduling algorithm)
         process_clean(&procList[i]);
 
@@ -71,6 +71,22 @@ int main(int argc, char** argv){
     printProc(procList,numOfProc);
 
     do_FCFS(numOfProc, jobs, &chart);
+    i=0;
+    while(1){
+        if(chart.processes[i] == 0){
+            break;
+        }
+        printf("Timeline : %d ~ %d pid : %d\n", chart.start[i], chart.end[i], chart.processes[i]);
+        i++;
+    }
+
+    for(i=0;i<numOfProc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&procList[i]);
+        push_back(jobs, &nodeList[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+    do_nonpreemptive_SFJ(numOfProc, jobs, &chart);
 
     i=0;
     while(1){
@@ -80,6 +96,7 @@ int main(int argc, char** argv){
         printf("Timeline : %d ~ %d pid : %d\n", chart.start[i], chart.end[i], chart.processes[i]);
         i++;
     }
+
 
     // Freeing dynamic allocated variables
     free(procList);

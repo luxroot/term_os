@@ -100,10 +100,18 @@ void do_nonpreemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
             }
         }
 
-        // Check idle CPU & waiting job
+        // Check idle CPU & waiting job -> select appropriate job
         if (current_job == NULL && get_size(wq_ptr) != 0) {
             current_job = get_front(wq_ptr);
-            pop_front(wq_ptr);
+            int min_idx = 0;
+            for(i=0;i<get_size(wq_ptr);i++){
+                // Select minimum cpu_burst job
+                if(get_nth(wq_ptr, i)->value->cpu_burst < current_job->value->cpu_burst){
+                    current_job = get_nth(wq_ptr, i);
+                    min_idx = i;
+                }
+            }
+            pop_nth(wq_ptr, min_idx);
             chart_ptr->start[chart_index] = current_time;
         }
 
@@ -125,7 +133,7 @@ void do_nonpreemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
 
         add_waiting_times(wq_ptr);
 
-        // Check FCFS has ended
+        // Check nonP_SJF has ended
         if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
             break;
     }
