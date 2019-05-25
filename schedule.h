@@ -6,6 +6,8 @@
 #include "chart.h"
 #include <stddef.h>
 
-NodePtr do_FCFS(uint, DLLptr, ChartPtr);
+void do_FCFS(uint, DLLptr, ChartPtr);
+
+void do_nonpreemptive_SFJ(uint , DLLptr , ChartPtr);
 
 #endif //TERM_SCHEDULE_H

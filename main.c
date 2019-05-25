@@ -24,9 +24,9 @@ int main(int argc, char** argv){
     }
 
     // Random seed
-    int rnd;
+    unsigned int rnd;
     int rnd_fd = open("/dev/random", O_RDONLY);
-    read(rnd_fd, &rnd, sizeof(int));
+    read(rnd_fd, &rnd, sizeof(unsigned int));
     srand(rnd);
     close(rnd_fd);
 
@@ -46,7 +46,7 @@ int main(int argc, char** argv){
     for(i=0;i<numOfProc;i++){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&procList[i], i+1);
-
+        procList[i].arrival += rand() % (numOfProc * 15);
         // initialize changing variables (these variables changes with scheduling algorithm)
         process_clean(&procList[i]);
 
@@ -60,7 +60,7 @@ int main(int argc, char** argv){
     Chart chart={0};
 
 //    jobs->nil.next->value->arrival = 3;
-//    jobs->nil.next->next->value->arrival = 12;
+//    jobs->nil.next->next->value->arrival = 3;
 //    jobs->nil.next->next->next->value->arrival = 10;
 //
 //
@@ -77,7 +77,7 @@ int main(int argc, char** argv){
         if(chart.processes[i] == 0){
             break;
         }
-        printf("Timeline : %d pid : %d\n",chart.timelines[i], chart.processes[i]);
+        printf("Timeline : %d ~ %d pid : %d\n", chart.start[i], chart.end[i], chart.processes[i]);
         i++;
     }
 
