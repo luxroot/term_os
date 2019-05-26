@@ -1,0 +1,4 @@
+#ifndef TERM_EVALUATE_H
+#define TERM_EVALUATE_H
+
+#endif //TERM_EVALUATE_H

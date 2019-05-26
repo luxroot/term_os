@@ -9,4 +9,4 @@ ADD_EXECUTABLE( term
         dllist.c
         schedule.c
         chart.c
-        )
+        evaluate.c)

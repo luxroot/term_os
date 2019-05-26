@@ -12,7 +12,7 @@
 void printProc(ProcPtr procList, int n){
     int i;
     for(i=0;i<n;i++){
-        printf("pid : %d, arrival : %d, burst : %d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst);
+        printf("pid : %d, arrival : %d, burst : %d, priority : %d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst, procList[i].priority);
     }
 }
 
@@ -24,17 +24,20 @@ void printProcAfter(ProcPtr procList, int n){
 }
 
 int main(int argc, char** argv){
-    unsigned int numOfProc, printLines=50;
+    unsigned int numOfProc = 5, printLines=50, arrival_weight=10;
     // Error checking (invalid argc)
     if(argc < 2){
-        fprintf(stderr,"usage : %s [number of processes] [printing lines]\n",argv[0]);
+        fprintf(stderr,"usage : %s [number of processes] [arrival weight] [printing lines]\n",argv[0]);
         exit(1);
     }
     if(argc >= 2){
         numOfProc = atoi(argv[1]);
     }
     if(argc >= 3){
-        printLines = atoi(argv[2]);
+        arrival_weight = atoi(argv[2]);
+    }
+    if(argc >= 4){
+        printLines = atoi(argv[3]);
     }
 
     // Random seed
@@ -62,7 +65,7 @@ int main(int argc, char** argv){
     for(i=0;i<numOfProc;i++){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&procList[i], i+1);
-        procList[i].arrival += rand() % (numOfProc * 15);
+        procList[i].arrival += rand() % (numOfProc * arrival_weight);
 
         // put Process pointer into nodeList
         nodeList[i].value = &procList[i];
@@ -79,6 +82,8 @@ int main(int argc, char** argv){
 
     // Do Scheduling
 
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
     for(i=0;i<numOfProc;i++){
         // initialize changing variables (these variables changes with scheduling algorithm)
         process_clean(&procList[i]);
@@ -88,6 +93,7 @@ int main(int argc, char** argv){
 
     do_FCFS(numOfProc, jobs, &chart);
 
+    printf("FCFS scheduling start!\n");
     drawChart(&chart, printLines);
     printProcAfter(procList, numOfProc);
 
@@ -100,6 +106,7 @@ int main(int argc, char** argv){
     }
     memset(&chart, 0, sizeof(chart));
 
+    printf("Non-Preemptive Shortest job first scheduling start!\n");
     do_nonpreemptive_SFJ(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
@@ -113,6 +120,7 @@ int main(int argc, char** argv){
     }
     memset(&chart, 0, sizeof(chart));
 
+    printf("Preemptive Shortest job first scheduling start!\n");
     do_preemptive_SFJ(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
@@ -126,6 +134,7 @@ int main(int argc, char** argv){
     }
     memset(&chart, 0, sizeof(chart));
 
+    printf("Non-Preemptive Higher priority job first scheduling start!\n");
     do_nonpreemptive_priority(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
@@ -139,6 +148,7 @@ int main(int argc, char** argv){
     }
     memset(&chart, 0, sizeof(chart));
 
+    printf("Preemptive Higher priority job first scheduling start!\n");
     do_preemptive_priority(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
