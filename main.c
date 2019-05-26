@@ -14,6 +14,7 @@ void printProc(ProcPtr procList, int n){
     for(i=0;i<n;i++){
         printf("pid : %d, arrival : %d, burst : %d, priority : %d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst, procList[i].priority);
     }
+    puts("");
 }
 
 void printProcAfter(ProcPtr procList, int n){
@@ -21,6 +22,7 @@ void printProcAfter(ProcPtr procList, int n){
     for(i=0;i<n;i++){
         printf("pid : %d, waiting time : %d, done time : %d\n", procList[i].pid, procList[i].waiting_time, procList[i].done_time);
     }
+    puts("");
 }
 
 int main(int argc, char** argv){
