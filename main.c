@@ -45,6 +45,7 @@ int main(int argc, char** argv){
     // Contains real node which has process pointer inside
     NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
 
+
     for(i=0;i<numOfProc;i++){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&procList[i], i+1);
@@ -53,23 +54,29 @@ int main(int argc, char** argv){
         // put Process pointer into nodeList
         nodeList[i].value = &procList[i];
 
-        push_back(jobs, &nodeList[i]);
     }
+
+    procList[0].arrival=0;
+    procList[0].cpu_burst=10;
+
+    procList[1].arrival=1;
+    procList[1].cpu_burst=3;
+
     printProc(procList,numOfProc);
 
-    // Do Scheduling
-
-    for(i=0;i<numOfProc;i++){
-        // initialize changing variables (these variables changes with scheduling algorithm)
-        process_clean(&procList[i]);
-        push_back(jobs, &nodeList[i]);
-    }
-    memset(&chart, 0, sizeof(chart));
-
-    do_FCFS(numOfProc, jobs, &chart);
-
-    drawChart(&chart, 50);
-
+//    // Do Scheduling
+//
+//    for(i=0;i<numOfProc;i++){
+//        // initialize changing variables (these variables changes with scheduling algorithm)
+//        process_clean(&procList[i]);
+//        push_back(jobs, &nodeList[i]);
+//    }
+//    memset(&chart, 0, sizeof(chart));
+//
+//    do_FCFS(numOfProc, jobs, &chart);
+//
+//    drawChart(&chart, 50);
+//
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     for(i=0;i<numOfProc;i++){
@@ -79,14 +86,27 @@ int main(int argc, char** argv){
     }
     memset(&chart, 0, sizeof(chart));
 
-    do_nonpreemptive_SFJ(numOfProc, jobs, &chart);
+    do_preemptive_SFJ(numOfProc, jobs, &chart);
 
     drawChart(&chart, 50);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Freeing dynamic allocated variables
-    free(procList);
-    free(nodeList);
+//    for(i=0;i<numOfProc;i++){
+//        // initialize changing variables (these variables changes with scheduling algorithm)
+//        process_clean(&procList[i]);
+//        push_back(jobs, &nodeList[i]);
+//    }
+//    memset(&chart, 0, sizeof(chart));
+//
+//    do_preemptive_SFJ(numOfProc, jobs, &chart);
+//
+//    drawChart(&chart, 50);
+//
+//
+//    // Freeing dynamic allocated variables
+//    free(procList);
+//    free(nodeList);
 
     return 0;
 }

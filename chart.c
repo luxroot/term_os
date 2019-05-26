@@ -44,14 +44,12 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
                 tl_idx_for_mid_tl++;
                 printf("|");
             }
+            if(chart_ptr->start[chart_idx] == cur){
+                printf("|");
+                chart_idx++;
+            }
             else{
                 printf(" ");
-            }
-            if(chart_ptr->start[chart_idx] == cur){
-                sprintf(buffer,"%d",chart_ptr->processes[chart_idx]);
-                printf("%s",buffer);
-                j += strlen(buffer);
-                chart_idx++;
             }
         }
         puts("");
@@ -66,6 +64,21 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
             }
             else{
                 printf("-");
+            }
+        }
+
+        puts("");
+        for(j=0;j<lines;j++){
+            if(cur == lastTimeline)
+                break;
+            cur = i*lines + j;
+            if(cur % 10 == 0){
+                sprintf(buffer,"%d",cur);
+                printf("%s",buffer);
+                j += strlen(buffer)-1;
+            }
+            else{
+                printf(" ");
             }
         }
         puts("");

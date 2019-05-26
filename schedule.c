@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "schedule.h"
 #include "chart.h"
@@ -151,6 +152,7 @@ void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
     NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
 
     NodePtr current_job = NULL;
+    NodePtr new_job = NULL;
     uint current_time=0;
     uint i=0;
     uint chart_index = 0;
@@ -179,6 +181,28 @@ void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
             }
             pop_nth(wq_ptr, min_idx);
             chart_ptr->start[chart_index] = current_time;
+        }
+        // Check current working process & waiting job -> find shorter job
+        else if (current_job != NULL && get_size(wq_ptr) != 0) {
+            new_job = get_front(wq_ptr);
+            int min_idx = 0;
+            for(i=0;i<get_size(wq_ptr);i++){
+                // Select minimum cpu_burst job
+                if(get_nth(wq_ptr, i)->value->cpu_burst < new_job->value->cpu_burst - new_job->value->bursted){
+                    new_job = get_nth(wq_ptr, i);
+                    min_idx = i;
+                }
+            }
+            if(current_job->value != new_job->value && new_job->value->cpu_burst - new_job->value->bursted < current_job->value->cpu_burst - current_job->value->bursted){
+                printf("Context Switch!\n");
+                chart_ptr->processes[chart_index] = current_job->value->pid;
+                chart_ptr->end[chart_index] = current_time;
+                chart_index++;
+                pop_nth(wq_ptr, min_idx);
+                push_back(wq_ptr, current_job);
+                current_job = new_job;
+                chart_ptr->start[chart_index] = current_time;
+            }
         }
 
         current_time++;
