@@ -4,7 +4,7 @@
 
 #include "chart.h"
 
-unsigned int *findValue(unsigned int* start, unsigned int* end, unsigned int value){
+unsigned int *findValue(const unsigned int* start, const unsigned int* end, unsigned int value){
     unsigned int* ptr=start;
     while(ptr <= end){
         if(*ptr == value)
@@ -46,18 +46,18 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
     }
     totalTimelines = tl_idx;
     lastTimeline = timelines[totalTimelines-1];
-
+    chart_idx=0;
     for(i=0;i<lastTimeline/lines+1;i++){
         for(j=0;j<lines;j++){
             cur = i*lines + j;
             if(cur == timelines[tl_idx_even]){
                 tl_idx_even+=2;
                 sprintf(buffer,"%d",cur);
-                printf("%s",buffer);
-                j += strlen(buffer)-1;
+                printf("%-6s",buffer);
+                j++;
             }
             else{
-                printf(" ");
+                printf("   ");
             }
             if(cur == lastTimeline)
                 break;
@@ -66,42 +66,52 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
 
         for(j=0;j<lines;j++){
             cur = i*lines + j;
-            if(timelines[tl_idx_for_upper_tl] == cur){
+            if(cur == lastTimeline) {
+                printf("+");
+                break;
+            }
+            else if(timelines[tl_idx_for_upper_tl] == cur){
                 tl_idx_for_upper_tl++;
-                printf("+");
+                printf("+--");
+            }
+            else {
+                printf("---");
+            }
+        }
+        puts("");
+
+        for(j=0;j<lines;j++){
+            cur = i*lines + j;
+            if(chart_ptr->start[chart_idx] == cur){
+                sprintf(buffer,"|%-2d",chart_ptr->processes[chart_idx]);
+                chart_idx++;
+                printf("%s",buffer);
+            }
+            else if(findValue(timelines, timelines+totalTimelines, cur)){
+                printf("|  ");
             }
             else{
-                printf("-");
+                printf("   ");
             }
-            if(cur == lastTimeline)
+            if(cur == lastTimeline) {
                 break;
+            }
         }
         puts("");
 
         for(j=0;j<lines;j++){
             cur = i*lines + j;
-            unsigned int *ptr = findValue(chart_ptr->start,chart_ptr->start+100,cur);
-            unsigned int value;
-            if(ptr != NULL){
-                value = *ptr;
-                printf("%d", value);
-            }
-            if(cur == lastTimeline)
+            if(cur == lastTimeline) {
+                printf("+");
                 break;
-        }
-        puts("");
-
-        for(j=0;j<lines;j++){
-            cur = i*lines + j;
-            if(timelines[tl_idx_for_lower_tl] == cur){
+            }
+            else if(timelines[tl_idx_for_lower_tl] == cur){
                 tl_idx_for_lower_tl++;
-                printf("+");
+                printf("+--");
             }
             else{
-                printf("-");
+                printf("---");
             }
-            if(cur == lastTimeline)
-                break;
         }
 
         puts("");
@@ -110,12 +120,12 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
             cur = i*lines + j;
             if(cur == timelines[tl_idx_odd]){
                 tl_idx_odd+=2;
-                sprintf(buffer,"%d",cur);
+                sprintf(buffer,"%-6d",cur);
                 printf("%s",buffer);
-                j += strlen(buffer)-1;
+                j++;
             }
             else{
-                printf(" ");
+                printf("   ");
             }
             if(cur == lastTimeline)
                 break;
