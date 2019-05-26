@@ -59,24 +59,24 @@ int main(int argc, char** argv){
     procList[0].arrival=0;
     procList[0].cpu_burst=10;
 
-    procList[1].arrival=1;
+    procList[1].arrival=2;
     procList[1].cpu_burst=3;
 
     printProc(procList,numOfProc);
 
-//    // Do Scheduling
-//
-//    for(i=0;i<numOfProc;i++){
-//        // initialize changing variables (these variables changes with scheduling algorithm)
-//        process_clean(&procList[i]);
-//        push_back(jobs, &nodeList[i]);
-//    }
-//    memset(&chart, 0, sizeof(chart));
-//
-//    do_FCFS(numOfProc, jobs, &chart);
-//
-//    drawChart(&chart, 50);
-//
+    // Do Scheduling
+
+    for(i=0;i<numOfProc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&procList[i]);
+        push_back(jobs, &nodeList[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    do_FCFS(numOfProc, jobs, &chart);
+
+    drawChart(&chart, 50);
+
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     for(i=0;i<numOfProc;i++){
