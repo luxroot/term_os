@@ -1,4 +1,3 @@
-
 #ifndef TERM_CHART_H
 #define TERM_CHART_H
 
@@ -10,6 +9,6 @@ typedef struct _Chart{
 
 typedef Chart *ChartPtr;
 
-void drawChart(ChartPtr, unsigned int, unsigned int);
+void drawChart(ChartPtr, unsigned int);
 
 #endif //TERM_CHART_H

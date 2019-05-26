@@ -68,15 +68,7 @@ int main(int argc, char** argv){
 
     do_FCFS(numOfProc, jobs, &chart);
 
-    i=0;
-    while(1){
-        if(chart.processes[i] == 0){
-            break;
-        }
-        printf("Timeline : %d ~ %d pid : %d\n", chart.start[i], chart.end[i], chart.processes[i]);
-        i++;
-    }
-    drawChart(&chart, numOfProc, 50);
+    drawChart(&chart, 50);
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -89,15 +81,7 @@ int main(int argc, char** argv){
 
     do_nonpreemptive_SFJ(numOfProc, jobs, &chart);
 
-    i=0;
-    while(1){
-        if(chart.processes[i] == 0){
-            break;
-        }
-        printf("Timeline : %d ~ %d pid : %d\n", chart.start[i], chart.end[i], chart.processes[i]);
-        i++;
-    }
-    drawChart(&chart, numOfProc, 50);
+    drawChart(&chart, 50);
 
 
     // Freeing dynamic allocated variables

@@ -1,6 +1,7 @@
-#include "queue.h"
 #include <stddef.h>
 #include <stdlib.h>
+
+#include "queue.h"
 
 // Initializing queue
 void queue_init(Qptr qptr){

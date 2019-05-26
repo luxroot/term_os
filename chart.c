@@ -1,11 +1,10 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 #include "chart.h"
 
-void drawChart(ChartPtr chart_ptr, unsigned int numOfProc, unsigned int lines){
+void drawChart(ChartPtr chart_ptr, unsigned int lines){
     unsigned int tl_idx=3, i=0, totalTimelines=0, lastTimeline=0, j, cur=0, chart_idx = 1;
     unsigned int tl_idx_for_upper_tl = 0, tl_idx_for_lower_tl = 0, tl_idx_for_mid_tl = 0;
     unsigned int timelines[2000] = {0};
@@ -48,7 +47,7 @@ void drawChart(ChartPtr chart_ptr, unsigned int numOfProc, unsigned int lines){
             else{
                 printf(" ");
             }
-            if(chart_ptr->start[chart_idx]+1 == cur){
+            if(chart_ptr->start[chart_idx] == cur){
                 sprintf(buffer,"%d",chart_ptr->processes[chart_idx]);
                 printf("%s",buffer);
                 j += strlen(buffer);

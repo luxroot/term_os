@@ -1,8 +1,7 @@
-#include "process.h"
-
 #ifndef TERM_DLLIST_H
 #define TERM_DLLIST_H
 
+#include "process.h"
 
 typedef ProcPtr DLL_Container;
 

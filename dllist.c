@@ -1,6 +1,6 @@
-#include "dllist.h"
 #include <stddef.h>
 
+#include "dllist.h"
 
 void DLList_init(DLLptr dll){
     dll->nil.next = NULL;
