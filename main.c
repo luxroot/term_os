@@ -16,11 +16,25 @@ void printProc(ProcPtr procList, int n){
     }
 }
 
+void printProcAfter(ProcPtr procList, int n){
+    int i;
+    for(i=0;i<n;i++){
+        printf("pid : %d, waiting time : %d, done time : %d\n", procList[i].pid, procList[i].waiting_time, procList[i].done_time);
+    }
+}
+
 int main(int argc, char** argv){
+    unsigned int numOfProc, printLines=50;
     // Error checking (invalid argc)
     if(argc < 2){
-        fprintf(stderr,"usage : %s [number of processes]\n",argv[0]);
+        fprintf(stderr,"usage : %s [number of processes] [printing lines]\n",argv[0]);
         exit(1);
+    }
+    if(argc >= 2){
+        numOfProc = atoi(argv[1]);
+    }
+    if(argc >= 3){
+        printLines = atoi(argv[2]);
     }
 
     // Random seed
@@ -31,7 +45,6 @@ int main(int argc, char** argv){
     close(rnd_fd);
 
     // Initializing variables
-    unsigned int numOfProc = atoi(argv[1]);
     unsigned int i;
 
     DLList _jobs;
@@ -56,11 +69,11 @@ int main(int argc, char** argv){
 
     }
 
-    procList[0].arrival=0;
-    procList[0].cpu_burst=10;
-
-    procList[1].arrival=2;
-    procList[1].cpu_burst=3;
+//    procList[0].arrival=0;
+//    procList[0].cpu_burst=10;
+//
+//    procList[1].arrival=2;
+//    procList[1].cpu_burst=3;
 
     printProc(procList,numOfProc);
 
@@ -75,7 +88,21 @@ int main(int argc, char** argv){
 
     do_FCFS(numOfProc, jobs, &chart);
 
-    drawChart(&chart, 50);
+    drawChart(&chart, printLines);
+    printProcAfter(procList, numOfProc);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    for(i=0;i<numOfProc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&procList[i]);
+        push_back(jobs, &nodeList[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    do_nonpreemptive_SFJ(numOfProc, jobs, &chart);
+
+    drawChart(&chart, printLines);
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -88,25 +115,40 @@ int main(int argc, char** argv){
 
     do_preemptive_SFJ(numOfProc, jobs, &chart);
 
-    drawChart(&chart, 50);
+    drawChart(&chart, printLines);
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-//    for(i=0;i<numOfProc;i++){
-//        // initialize changing variables (these variables changes with scheduling algorithm)
-//        process_clean(&procList[i]);
-//        push_back(jobs, &nodeList[i]);
-//    }
-//    memset(&chart, 0, sizeof(chart));
-//
-//    do_preemptive_SFJ(numOfProc, jobs, &chart);
-//
-//    drawChart(&chart, 50);
-//
-//
-//    // Freeing dynamic allocated variables
-//    free(procList);
-//    free(nodeList);
+    for(i=0;i<numOfProc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&procList[i]);
+        push_back(jobs, &nodeList[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    do_nonpreemptive_priority(numOfProc, jobs, &chart);
+
+    drawChart(&chart, printLines);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    for(i=0;i<numOfProc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&procList[i]);
+        push_back(jobs, &nodeList[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    do_preemptive_priority(numOfProc, jobs, &chart);
+
+    drawChart(&chart, printLines);
+
+    printProcAfter(procList, numOfProc);
+
+
+    // Freeing dynamic allocated variables
+    free(procList);
+    free(nodeList);
 
     return 0;
 }

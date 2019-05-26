@@ -4,9 +4,19 @@
 
 #include "chart.h"
 
+unsigned int *findValue(unsigned int* start, unsigned int* end, unsigned int value){
+    unsigned int* ptr=start;
+    while(ptr <= end){
+        if(*ptr == value)
+            return ptr;
+        ptr++;
+    }
+    return NULL;
+}
+
 void drawChart(ChartPtr chart_ptr, unsigned int lines){
     unsigned int tl_idx=3, i=0, totalTimelines=0, lastTimeline=0, j, cur=0, chart_idx = 1;
-    unsigned int tl_idx_for_upper_tl = 0, tl_idx_for_lower_tl = 0, tl_idx_for_mid_tl = 0;
+    unsigned int tl_idx_for_upper_tl = 0, tl_idx_for_lower_tl = 0;
     unsigned int tl_idx_odd=1, tl_idx_even=0;
     unsigned int timelines[2000] = {0};
     char buffer[10]={0};
@@ -36,7 +46,6 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
     }
     totalTimelines = tl_idx;
     lastTimeline = timelines[totalTimelines-1];
-    chart_idx = 0;
 
     for(i=0;i<lastTimeline/lines+1;i++){
         for(j=0;j<lines;j++){
@@ -71,12 +80,11 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
 
         for(j=0;j<lines;j++){
             cur = i*lines + j;
-            if(timelines[tl_idx_for_mid_tl] == cur){
-                tl_idx_for_mid_tl++;
-                printf("|");
-            }
-            else{
-                printf(" ");
+            unsigned int *ptr = findValue(chart_ptr->start,chart_ptr->start+100,cur);
+            unsigned int value;
+            if(ptr != NULL){
+                value = *ptr;
+                printf("%d", value);
             }
             if(cur == lastTimeline)
                 break;
