@@ -22,7 +22,6 @@ Compile
 ```
 cmake CMakeLists.txt
 make
-./term
 ```
 Execution
 ```$xslt
