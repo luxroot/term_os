@@ -10,21 +10,6 @@
 #include "schedule.h"
 #include "evaluate.h"
 
-void printProc(ProcPtr procList, int n){
-    int i;
-    for(i=0;i<n;i++){
-        printf("pid : %-3d, arrival : %-3d, cpu_burst : %-3d, priority : %-3d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst, procList[i].priority);
-    }
-    puts("");
-}
-
-void printProcAfter(ProcPtr procList, int n){
-    int i;
-    for(i=0;i<n;i++){
-        printf("pid : %d, waiting time : %d, done time : %d\n", procList[i].pid, procList[i].waiting_time, procList[i].done_time);
-    }
-    puts("");
-}
 
 int main(int argc, char** argv){
     unsigned int numOfProc = 5, printLines=50, arrival_weight=10;

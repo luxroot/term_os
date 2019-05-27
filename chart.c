@@ -4,8 +4,8 @@
 
 #include "chart.h"
 
-unsigned int *findValue(const unsigned int* start, const unsigned int* end, unsigned int value){
-    unsigned int* ptr=start;
+const unsigned int *findValue(const unsigned int* start, const unsigned int* end, unsigned int value){
+    const unsigned int* ptr=start;
     while(ptr <= end){
         if(*ptr == value)
             return ptr;
@@ -17,16 +17,23 @@ unsigned int *findValue(const unsigned int* start, const unsigned int* end, unsi
 void drawChart(ChartPtr chart_ptr, unsigned int lines){
     unsigned int tl_idx=3, i=0, totalTimelines=0, lastTimeline=0, j, cur=0, chart_idx = 1;
     unsigned int tl_idx_for_upper_tl = 0, tl_idx_for_lower_tl = 0;
-    unsigned int tl_idx_odd=1, tl_idx_even=0;
+    unsigned int tl_idx_odd=1, tl_idx_even=0, exit_loop=0;
     unsigned int timelines[2000] = {0};
     char buffer[10]={0};
 
-    i=0;
-    while(1){
-        if(chart_ptr->processes[i] == 0)
+    for(i=0;;i++){
+        for(j=0;j<4;j++){
+            cur = i*4+j;
+            if(chart_ptr->processes[cur] == 0) {
+                exit_loop = 1;
+                break;
+            }
+            printf("pid : %-3d%4d ~ %-4d| ",chart_ptr->processes[cur],chart_ptr->start[cur],chart_ptr->end[cur]);
+        }
+        puts("");
+        if(exit_loop){
             break;
-        printf("pid : %d %d ~ %d\n",chart_ptr->processes[i],chart_ptr->start[i],chart_ptr->end[i]);
-        i++;
+        }
     }
 
     if(chart_ptr->start[0] == 0) {
@@ -37,6 +44,7 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
         timelines[1] = chart_ptr->start[0];
         timelines[2] = chart_ptr->end[0];
     }
+
     while(chart_ptr->processes[chart_idx] != 0){
         if(timelines[tl_idx-1] != chart_ptr->start[chart_idx]){
             timelines[tl_idx++] = chart_ptr->start[chart_idx];
@@ -46,6 +54,7 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
     }
     totalTimelines = tl_idx;
     lastTimeline = timelines[totalTimelines-1];
+
     chart_idx=0;
     for(i=0;i<lastTimeline/lines+1;i++){
         for(j=0;j<lines;j++){
