@@ -26,7 +26,7 @@ make
 ```
 Execution
 ```$xslt
-usage : ./term [number of processes] [[arrival weight]] [[printing lines]]"
+usage : ./term [number of processes] [[arrival weight]] [[printing lines]]
 ```
 Note that Arrival weight and Printing lines are optional argument
 
