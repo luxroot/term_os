@@ -4,7 +4,8 @@
 * FCFS
 * Preemptive / Non-preemptive SJF
 * Preemptive / Non-preemptive Priority
-* Round robin (To be updated)
+* Round robin
+* Preemptive / Non-preemptive HRRN (to be updated)
 
 ## Dependencies
 * GCC
@@ -24,9 +25,7 @@ cmake CMakeLists.txt
 make
 ```
 Execution
-```$xslt
-usage : ./term [number of processes] [[arrival weight]] [[printing lines]]
 ```
-Note that Arrival weight and Printing lines are optional argument
-
-(default value : arrival_weight=10, printLines=50) 
+usage : ./term [number of processes] [[time quantum=3]] [[arrival weight]=50] [[printing lines=10]]
+```
+Note that Time Quantum, Arrival weight and Printing lines are optional argument

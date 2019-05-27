@@ -13,9 +13,6 @@ void add_waiting_times(DLLptr wq_ptr){
 }
 
 void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    if(get_size(job_queue)==0){
-        return;
-    }
     DLList waiting_queue;
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
@@ -72,10 +69,7 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     free(node_list);
 }
 
-void do_nonpreemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    if(get_size(job_queue)==0){
-        return;
-    }
+void do_non_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     DLList waiting_queue;
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
@@ -142,9 +136,6 @@ void do_nonpreemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr
 
 
 void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    if(get_size(job_queue)==0){
-        return;
-    }
     DLList waiting_queue;
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
@@ -232,10 +223,7 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
 }
 
 
-void do_nonpreemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    if(get_size(job_queue)==0){
-        return;
-    }
+void do_non_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     DLList waiting_queue;
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
@@ -302,9 +290,6 @@ void do_nonpreemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr char
 
 
 void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    if(get_size(job_queue)==0){
-        return;
-    }
     DLList waiting_queue;
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
@@ -391,3 +376,68 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
     free(node_list);
 }
 
+void do_round_robin(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr, uint time_quantum){
+    DLList waiting_queue;
+    DLLptr wq_ptr = &waiting_queue;
+    DLList_init(wq_ptr);
+
+    NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
+
+    NodePtr current_job = NULL;
+    uint current_time=0;
+    uint i=0;
+    uint chart_index = 0;
+    uint node_index = 0;
+
+    while(1){
+        // Push arrived tasks into waiting queue
+        for(i=0;i<get_size(job_queue);i++) {
+            if (get_nth(job_queue, i)->value->arrival == current_time) {
+                node_list[node_index].value = get_nth(job_queue, i)->value;
+                push_back(wq_ptr, &node_list[node_index++]);
+                pop_nth(job_queue, i--);
+            }
+        }
+
+        // Check idle CPU & waiting job
+        if (current_job == NULL && get_size(wq_ptr) != 0) {
+            current_job = get_front(wq_ptr);
+            pop_front(wq_ptr);
+            chart_ptr->start[chart_index] = current_time;
+        }
+
+        current_time++;
+
+        // Check busy CPU
+        if(current_job != NULL) {
+            current_job->value->bursted++;
+            current_job->value->quantum++;
+
+            // Check done
+            if (current_job->value->bursted == current_job->value->cpu_burst) {
+                current_job->value->done_time = current_time;
+                chart_ptr->processes[chart_index] = current_job->value->pid;
+                chart_ptr->end[chart_index] = current_time;
+                chart_index++;
+                current_job = NULL;
+            }
+            else if (current_job->value->quantum >= time_quantum && get_size(wq_ptr) > 0){
+                current_job->value->quantum = 0;
+                push_back(wq_ptr, current_job);
+                chart_ptr->processes[chart_index] = current_job->value->pid;
+                chart_ptr->end[chart_index] = current_time;
+                chart_index++;
+                current_job = NULL;
+            }
+        }
+
+        add_waiting_times(wq_ptr);
+
+        // Check FCFS has ended
+        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+            break;
+    }
+
+    // Free dynamically allocated variable
+    free(node_list);
+}

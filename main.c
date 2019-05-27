@@ -12,20 +12,23 @@
 
 
 int main(int argc, char** argv){
-    unsigned int num_of_proc = 5, print_lines=50, arrival_weight=10;
+    unsigned int num_of_proc = 5, print_lines=50, arrival_weight=10, time_quantum=3;
     // Error checking (invalid argc)
     if(argc < 2){
-        fprintf(stderr,"usage : %s [number of processes] [[arrival weight]] [[printing lines]]\n",argv[0]);
+        fprintf(stderr,"usage : %s [number of processes] [[time quantum=3]] [[arrival weight]=50] [[printing lines=10]]\n",argv[0]);
         exit(1);
     }
     if(argc >= 2){
         num_of_proc = atoi(argv[1]);
     }
     if(argc >= 3){
-        arrival_weight = atoi(argv[2]);
+        time_quantum = atoi(argv[2]);
     }
     if(argc >= 4){
-        print_lines = atoi(argv[3]);
+        arrival_weight = atoi(argv[3]);
+    }
+    if(argc >= 5){
+        print_lines = atoi(argv[4]);
     }
 
     // Random seed
@@ -95,7 +98,7 @@ int main(int argc, char** argv){
     memset(&chart, 0, sizeof(chart));
 
     printf("Non-Preemptive Shortest job first scheduling start!\n");
-    do_nonpreemptive_SFJ(num_of_proc, jobs, &chart);
+    do_non_preemptive_SFJ(num_of_proc, jobs, &chart);
 
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
@@ -125,7 +128,7 @@ int main(int argc, char** argv){
     memset(&chart, 0, sizeof(chart));
 
     printf("Non-Preemptive Higher priority job first scheduling start!\n");
-    do_nonpreemptive_priority(num_of_proc, jobs, &chart);
+    do_non_preemptive_priority(num_of_proc, jobs, &chart);
 
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
@@ -141,6 +144,21 @@ int main(int argc, char** argv){
 
     printf("Preemptive Higher priority job first scheduling start!\n");
     do_preemptive_priority(num_of_proc, jobs, &chart);
+
+    drawChart(&chart, print_lines);
+    print_evaluation(num_of_proc, proc_list, &chart);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    for(i=0;i<num_of_proc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&proc_list[i]);
+        push_back(jobs, &node_list[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    printf("Round Robin scheduling start!\n");
+    do_round_robin(num_of_proc, jobs, &chart, time_quantum);
 
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
