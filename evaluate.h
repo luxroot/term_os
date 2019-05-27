@@ -4,6 +4,6 @@
 #include "process.h"
 #include "chart.h"
 
-void printEvaluation(uint, ProcPtr, ChartPtr);
+void print_evaluation(uint numOfProc, ProcPtr procList, ChartPtr chart_ptr);
 
 #endif //TERM_EVALUATE_H

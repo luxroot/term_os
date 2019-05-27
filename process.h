@@ -23,7 +23,7 @@ typedef Process *ProcPtr;
 void process_init(ProcPtr, uint);
 void process_clean(ProcPtr);
 
-void printProc(ProcPtr procList, int n);
-void printProcAfter(ProcPtr procList, int n);
+void print_process_info(ProcPtr procList, int n);
+void print_process_info_changing_vars(ProcPtr procList, int n);
 
 #endif //TERM_PROCESS_H

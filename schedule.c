@@ -12,7 +12,7 @@ void add_waiting_times(DLLptr wq_ptr){
     }
 }
 
-void do_FCFS(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
+void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     if(get_size(job_queue)==0){
         return;
     }
@@ -20,7 +20,7 @@ void do_FCFS(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
 
-    NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
+    NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
     NodePtr current_job = NULL;
     uint current_time=0;
@@ -32,8 +32,8 @@ void do_FCFS(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
         // Push arrived tasks into waiting queue
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
-                nodeList[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &nodeList[node_index++]);
+                node_list[node_index].value = get_nth(job_queue, i)->value;
+                push_back(wq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -69,10 +69,10 @@ void do_FCFS(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
     }
 
     // Free dynamically allocated variable
-    free(nodeList);
+    free(node_list);
 }
 
-void do_nonpreemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
+void do_nonpreemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     if(get_size(job_queue)==0){
         return;
     }
@@ -80,7 +80,7 @@ void do_nonpreemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
 
-    NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
+    NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
     NodePtr current_job = NULL;
     uint current_time=0;
@@ -92,8 +92,8 @@ void do_nonpreemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
         // Push arrived tasks into waiting queue
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
-                nodeList[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &nodeList[node_index++]);
+                node_list[node_index].value = get_nth(job_queue, i)->value;
+                push_back(wq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -101,7 +101,7 @@ void do_nonpreemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
         // Check idle CPU & waiting job -> select appropriate job
         if (current_job == NULL && get_size(wq_ptr) != 0) {
             current_job = get_front(wq_ptr);
-            int min_idx = 0;
+            unsigned int min_idx = 0;
             for(i=0;i<get_size(wq_ptr);i++){
                 // Select minimum cpu_burst job
                 if(get_nth(wq_ptr, i)->value->cpu_burst < current_job->value->cpu_burst){
@@ -137,11 +137,11 @@ void do_nonpreemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
     }
 
     // Free dynamically allocated variable
-    free(nodeList);
+    free(node_list);
 }
 
 
-void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
+void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     if(get_size(job_queue)==0){
         return;
     }
@@ -149,7 +149,7 @@ void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
 
-    NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
+    NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
     NodePtr current_job = NULL;
     NodePtr new_job = NULL;
@@ -162,8 +162,8 @@ void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
         // Push arrived tasks into waiting queue
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
-                nodeList[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &nodeList[node_index++]);
+                node_list[node_index].value = get_nth(job_queue, i)->value;
+                push_back(wq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -171,7 +171,7 @@ void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
         // Check idle CPU & waiting job -> select appropriate job
         if (current_job == NULL && get_size(wq_ptr) != 0) {
             current_job = get_front(wq_ptr);
-            int min_idx = 0;
+            unsigned int min_idx = 0;
             for(i=0;i<get_size(wq_ptr);i++){
                 // Select minimum cpu_burst job
                 if(get_nth(wq_ptr, i)->value->cpu_burst < current_job->value->cpu_burst){
@@ -185,7 +185,7 @@ void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
         // Check current working process & waiting job -> find shorter job
         else if (current_job != NULL && get_size(wq_ptr) != 0) {
             new_job = get_front(wq_ptr);
-            int min_idx = 0;
+            unsigned int min_idx = 0;
             for(i=0;i<get_size(wq_ptr);i++){
                 // Select minimum cpu_burst job
                 if(get_nth(wq_ptr, i)->value->cpu_burst < new_job->value->cpu_burst - new_job->value->bursted){
@@ -228,11 +228,11 @@ void do_preemptive_SFJ(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
     }
 
     // Free dynamically allocated variable
-    free(nodeList);
+    free(node_list);
 }
 
 
-void do_nonpreemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
+void do_nonpreemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     if(get_size(job_queue)==0){
         return;
     }
@@ -240,7 +240,7 @@ void do_nonpreemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
 
-    NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
+    NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
     NodePtr current_job = NULL;
     uint current_time=0;
@@ -252,8 +252,8 @@ void do_nonpreemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_
         // Push arrived tasks into waiting queue
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
-                nodeList[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &nodeList[node_index++]);
+                node_list[node_index].value = get_nth(job_queue, i)->value;
+                push_back(wq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -261,7 +261,7 @@ void do_nonpreemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_
         // Check idle CPU & waiting job -> select appropriate job
         if (current_job == NULL && get_size(wq_ptr) != 0) {
             current_job = get_front(wq_ptr);
-            int min_idx = 0;
+            unsigned int min_idx = 0;
             for(i=0;i<get_size(wq_ptr);i++){
                 // Select minimum cpu_burst job
                 if(get_nth(wq_ptr, i)->value->priority < current_job->value->priority){
@@ -297,11 +297,11 @@ void do_nonpreemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_
     }
 
     // Free dynamically allocated variable
-    free(nodeList);
+    free(node_list);
 }
 
 
-void do_preemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr){
+void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     if(get_size(job_queue)==0){
         return;
     }
@@ -309,7 +309,7 @@ void do_preemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr
     DLLptr wq_ptr = &waiting_queue;
     DLList_init(wq_ptr);
 
-    NodePtr nodeList = (NodePtr) malloc(sizeof(Node) * numOfProc);
+    NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
     NodePtr current_job = NULL;
     NodePtr new_job = NULL;
@@ -322,8 +322,8 @@ void do_preemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr
         // Push arrived tasks into waiting queue
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
-                nodeList[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &nodeList[node_index++]);
+                node_list[node_index].value = get_nth(job_queue, i)->value;
+                push_back(wq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -331,7 +331,7 @@ void do_preemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr
         // Check idle CPU & waiting job -> select appropriate job
         if (current_job == NULL && get_size(wq_ptr) != 0) {
             current_job = get_front(wq_ptr);
-            int min_idx = 0;
+            unsigned int min_idx = 0;
             for(i=0;i<get_size(wq_ptr);i++){
                 // Select minimum cpu_burst job
                 if(get_nth(wq_ptr, i)->value->priority < current_job->value->priority){
@@ -345,7 +345,7 @@ void do_preemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr
             // Check current working process & waiting job -> find shorter job
         else if (current_job != NULL && get_size(wq_ptr) != 0) {
             new_job = get_front(wq_ptr);
-            int min_idx = 0;
+            unsigned int min_idx = 0;
             for(i=0;i<get_size(wq_ptr);i++){
                 // Select minimum cpu_burst job
                 if(get_nth(wq_ptr, i)->value->priority < new_job->value->priority){
@@ -388,6 +388,6 @@ void do_preemptive_priority(uint numOfProc, DLLptr job_queue, ChartPtr chart_ptr
     }
 
     // Free dynamically allocated variable
-    free(nodeList);
+    free(node_list);
 }
 
