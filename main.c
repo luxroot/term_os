@@ -63,12 +63,6 @@ int main(int argc, char** argv){
 
     }
 
-//    proc_list[0].arrival=0;
-//    proc_list[0].cpu_burst=10;
-//
-//    proc_list[1].arrival=2;
-//    proc_list[1].cpu_burst=3;
-
     print_process_info(proc_list, num_of_proc);
 
     // Do Scheduling
@@ -163,6 +157,35 @@ int main(int argc, char** argv){
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    for(i=0;i<num_of_proc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&proc_list[i]);
+        push_back(jobs, &node_list[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    printf("Non-Preemptive HRRN scheduling start!\n");
+    do_non_preemptive_HRRN(num_of_proc, jobs, &chart);
+
+    drawChart(&chart, print_lines);
+    print_evaluation(num_of_proc, proc_list, &chart);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    for(i=0;i<num_of_proc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&proc_list[i]);
+        push_back(jobs, &node_list[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    printf("Preemptive HRRN scheduling start!\n");
+    do_preemptive_HRRN(num_of_proc, jobs, &chart);
+
+    drawChart(&chart, print_lines);
+    print_evaluation(num_of_proc, proc_list, &chart);
 
     // Freeing dynamic allocated variables
     free(proc_list);

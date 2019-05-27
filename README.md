@@ -5,7 +5,7 @@
 * Preemptive / Non-preemptive SJF
 * Preemptive / Non-preemptive Priority
 * Round robin
-* Preemptive / Non-preemptive HRRN (to be updated)
+* Preemptive / Non-preemptive HRRN
 
 ## Dependencies
 * GCC
