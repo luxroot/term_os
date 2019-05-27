@@ -8,11 +8,12 @@
 #include "queue.h"
 #include "dllist.h"
 #include "schedule.h"
+#include "evaluate.h"
 
 void printProc(ProcPtr procList, int n){
     int i;
     for(i=0;i<n;i++){
-        printf("pid : %d, arrival : %d, burst : %d, priority : %d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst, procList[i].priority);
+        printf("pid : %-3d, arrival : %-3d, cpu_burst : %-3d, priority : %-3d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst, procList[i].priority);
     }
     puts("");
 }
@@ -97,7 +98,7 @@ int main(int argc, char** argv){
 
     printf("FCFS scheduling start!\n");
     drawChart(&chart, printLines);
-    printProcAfter(procList, numOfProc);
+    printEvaluation(numOfProc, procList, &chart);
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,6 +113,7 @@ int main(int argc, char** argv){
     do_nonpreemptive_SFJ(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
+    printEvaluation(numOfProc, procList, &chart);
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -126,6 +128,7 @@ int main(int argc, char** argv){
     do_preemptive_SFJ(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
+    printEvaluation(numOfProc, procList, &chart);
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -140,6 +143,7 @@ int main(int argc, char** argv){
     do_nonpreemptive_priority(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
+    printEvaluation(numOfProc, procList, &chart);
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -154,8 +158,7 @@ int main(int argc, char** argv){
     do_preemptive_priority(numOfProc, jobs, &chart);
 
     drawChart(&chart, printLines);
-
-    printProcAfter(procList, numOfProc);
+    printEvaluation(numOfProc, procList, &chart);
 
 
     // Freeing dynamic allocated variables

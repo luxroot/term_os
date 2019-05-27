@@ -2,7 +2,8 @@
 #define TERM_EVALUATE_H
 
 #include "process.h"
+#include "chart.h"
 
-void printEvaluation(procPtr);
+void printEvaluation(uint, ProcPtr, ChartPtr);
 
 #endif //TERM_EVALUATE_H
