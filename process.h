@@ -25,6 +25,5 @@ void process_clean(ProcPtr);
 
 void printProc(ProcPtr procList, int n);
 void printProcAfter(ProcPtr procList, int n);
-}
 
 #endif //TERM_PROCESS_H

@@ -22,7 +22,7 @@ void process_init(ProcPtr pc_ptr, uint pid){
 void printProc(ProcPtr procList, int n){
     int i;
     for(i=0;i<n;i++){
-        printf("pid : %-3d, arrival : %-4d, cpu_burst : %-3d, priority : %-3d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst, procList[i].priority);
+        printf("pid : %-3d| arrival : %-4d| cpu_burst : %-3d| priority : %-3d\n", procList[i].pid, procList[i].arrival, procList[i].cpu_burst, procList[i].priority);
     }
     puts("");
 }
