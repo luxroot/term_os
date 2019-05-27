@@ -59,8 +59,8 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
     for(i=0;i<lastTimeline/lines+1;i++){
         for(j=0;j<lines;j++){
             cur = i*lines + j;
-            if(cur == timelines[tl_idx_even]){
-                tl_idx_even+=2;
+            if(cur == timelines[tl_idx_odd]){
+                tl_idx_odd+=2;
                 sprintf(buffer,"%d",cur);
                 printf("%-6s",buffer);
                 j++;
@@ -127,8 +127,8 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
 
         for(j=0;j<lines;j++){
             cur = i*lines + j;
-            if(cur == timelines[tl_idx_odd]){
-                tl_idx_odd+=2;
+            if(cur == timelines[tl_idx_even]){
+                tl_idx_even+=2;
                 sprintf(buffer,"%-6d",cur);
                 printf("%s",buffer);
                 j++;
