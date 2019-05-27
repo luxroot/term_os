@@ -19,17 +19,17 @@ void process_init(ProcPtr pc_ptr, uint pid){
     process_clean(pc_ptr);
 }
 
-void print_process_info(ProcPtr proc_list, int n){
+void print_process_info(ProcPtr proc_list, int num_of_proc){
     int i;
-    for(i=0;i<n;i++){
+    for(i=0;i<num_of_proc;i++){
         printf("pid : %-3d| arrival : %-4d| cpu_burst : %-3d| priority : %-3d\n", proc_list[i].pid, proc_list[i].arrival, proc_list[i].cpu_burst, proc_list[i].priority);
     }
     puts("");
 }
 
-void print_process_info_changing_vars(ProcPtr proc_list, int n){
+void print_process_info_changing_vars(ProcPtr proc_list, int num_of_proc){
     int i;
-    for(i=0;i<n;i++){
+    for(i=0;i<num_of_proc;i++){
         printf("pid : %d, waiting time : %d, done time : %d\n", proc_list[i].pid, proc_list[i].waiting_time, proc_list[i].done_time);
     }
     puts("");
