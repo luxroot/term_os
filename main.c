@@ -15,7 +15,7 @@ int main(int argc, char** argv){
     unsigned int numOfProc = 5, printLines=50, arrival_weight=10;
     // Error checking (invalid argc)
     if(argc < 2){
-        fprintf(stderr,"usage : %s [number of processes] [arrival weight] [printing lines]\n",argv[0]);
+        fprintf(stderr,"usage : %s [number of processes] [[arrival weight]] [[printing lines]]\n",argv[0]);
         exit(1);
     }
     if(argc >= 2){
