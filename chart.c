@@ -30,10 +30,10 @@ void drawChart(ChartPtr chart_ptr, unsigned int lines){
             }
             printf("pid : %-3d%4d ~ %-4d| ",chart_ptr->processes[cur],chart_ptr->start[cur],chart_ptr->end[cur]);
         }
+        puts("");
         if(exit_loop){
             break;
         }
-        puts("");
     }
 
     if(chart_ptr->start[0] == 0) {
