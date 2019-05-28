@@ -6,7 +6,7 @@
 
 void print_evaluation(uint num_of_proc, ProcPtr proc_list, ChartPtr chart_ptr){
     unsigned long long total_turnaround_time=0, total_waiting_time=0, total_response_time=0;
-    unsigned int i=0, last_timeline, working_time=0;
+    unsigned int i=0, last_timeline, working_time=0, context_switches=0;
     double average_turnaround_time=0, average_waiting_time=0, throughput=0, cpu_utilization=0, average_response_time=0;
     unsigned int* first_response_time = (unsigned int*)malloc(sizeof(unsigned int) * num_of_proc);
     memset(first_response_time, 0, sizeof(unsigned int) * num_of_proc);
@@ -14,6 +14,8 @@ void print_evaluation(uint num_of_proc, ProcPtr proc_list, ChartPtr chart_ptr){
     while(1){
         if(chart_ptr->processes[i] == 0)
             break;
+        if(chart_ptr->end[i] == chart_ptr->start[i+1])
+            context_switches++;
         if(!first_response_time[chart_ptr->processes[i]-1])
             first_response_time[chart_ptr->processes[i]-1] = chart_ptr->end[i];
         working_time += chart_ptr->end[i] - chart_ptr->start[i];
@@ -38,7 +40,8 @@ void print_evaluation(uint num_of_proc, ProcPtr proc_list, ChartPtr chart_ptr){
     printf("Throughput : %lf / CPU Utilization : %lf%%\n", throughput, cpu_utilization);
     printf("Total / Average Turnaround Time : %lld / %lf\n", total_turnaround_time, average_turnaround_time);
     printf("Total / Average Waiting Time : %lld / %lf\n", total_waiting_time, average_waiting_time);
-    printf("Total / Average Response Time : %lld / %lf\n\n", total_response_time, average_response_time);
+    printf("Total / Average Response Time : %lld / %lf\n", total_response_time, average_response_time);
+    printf("Context Switches : %d\n\n", context_switches);
 
     // free dynamically allocated variables
     free(first_response_time);
