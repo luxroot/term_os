@@ -15,7 +15,7 @@ int main(int argc, char** argv){
     unsigned int num_of_proc = 5, print_lines=50, arrival_weight=10, time_quantum=3;
     // Error checking (invalid argc)
     if(argc < 2){
-        fprintf(stderr,"usage : %s [number of processes] [[time quantum=3]] [[arrival weight]=50] [[printing lines=10]]\n",argv[0]);
+        fprintf(stderr,"usage : %s [number of processes] [[time quantum=3]] [[arrival weight]=10] [[printing lines=50]]\n",argv[0]);
         exit(1);
     }
     if(argc >= 2){
@@ -56,7 +56,8 @@ int main(int argc, char** argv){
     for(i=0;i<num_of_proc;i++){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&proc_list[i], i+1);
-        proc_list[i].arrival += rand() % (num_of_proc * arrival_weight);
+	if(arrival_weight)
+	        proc_list[i].arrival += rand() % (num_of_proc * arrival_weight);
 
         // put Process pointer into node_list
         node_list[i].value = &proc_list[i];

@@ -26,6 +26,6 @@ make
 ```
 Execution
 ```
-usage : ./term [number of processes] [[time quantum=3]] [[arrival weight]=50] [[printing lines=10]]
+usage : ./term [number of processes] [[time quantum=3]] [[arrival weight]=10] [[printing lines=30]]
 ```
 Note that Time Quantum, Arrival weight and Printing lines are optional argument
