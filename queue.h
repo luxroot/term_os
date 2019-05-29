@@ -3,7 +3,7 @@
 
 #include "process.h"
 
-#define QUEUE_CAPACIVITY 1000
+#define QUEUE_MAX_SIZE 1000
 
 typedef Process* Queue_Container;
 

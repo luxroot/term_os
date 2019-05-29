@@ -4,6 +4,7 @@
 
 #include "schedule.h"
 #include "chart.h"
+#include "queue.h"
 
 void add_waiting_times(DLLptr rdq_ptr){
     uint i=0;
@@ -19,6 +20,11 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
 
     NodePtr rd_queue_node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
+    Queue io_queue;
+    Qptr io_qptr = &io_queue;
+    queue_init(io_qptr);
+    queue_destroy(io_qptr);
+
     NodePtr current_job = NULL;
     uint current_time=0;
     uint i=0;
@@ -32,6 +38,12 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
                 rd_queue_node_list[node_index].value = get_nth(job_queue, i)->value;
                 push_back(rdq_ptr, &rd_queue_node_list[node_index++]);
                 pop_nth(job_queue, i--);
+            }
+        }
+
+        if(current_job && current_job->value->io_burst){
+            if(rand() % 10 < 3){
+
             }
         }
 
