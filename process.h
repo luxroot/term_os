@@ -15,6 +15,8 @@ typedef struct _Process{
     uint done_time;
     uint bursted;
     uint quantum;
+    uint io_bursted;
+    uint do_io;
 } Process;
 
 

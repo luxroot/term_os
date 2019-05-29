@@ -25,7 +25,7 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     queue_init(io_qptr);
     queue_destroy(io_qptr);
 
-    NodePtr current_job = NULL;
+    NodePtr current_job = NULL, iterator;
     uint current_time=0;
     uint i=0;
     uint chart_index = 0;
@@ -47,11 +47,30 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
             }
         }
 
+        if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
+            if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
+                current_job->value->do_io = 1;
+                push_back(wq_ptr, current_job);
+                chart_ptr->processes[chart_index] = current_job->value->pid;
+                chart_ptr->end[chart_index] = current_time;
+                chart_index++;
+                current_job = NULL;
+            }
+        }
+
         // Check idle CPU & waiting job
-        if (current_job == NULL && get_size(rdq_ptr) != 0) {
-            current_job = get_front(rdq_ptr);
-            pop_front(rdq_ptr);
-            chart_ptr->start[chart_index] = current_time;
+        if (current_job == NULL && get_size(wq_ptr) != 0) {
+            for(i=0;i<get_size(wq_ptr);i++){
+                iterator = get_nth(wq_ptr, i);
+                if(iterator->value->cpu_burst - iterator->value->bursted != 0 && iterator->value->do_io == 0) {
+                    current_job = iterator;
+                    break;
+                }
+            }
+            if(current_job) {
+                pop_this(current_job);
+                chart_ptr->start[chart_index] = current_time;
+            }
         }
 
         current_time++;

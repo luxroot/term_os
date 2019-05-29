@@ -37,6 +37,8 @@ int main(int argc, char** argv){
     read(rnd_fd, &rnd, sizeof(unsigned int));
     srand(rnd);
     close(rnd_fd);
+    //sfaweklfjalksfjlaskdjflawejkflkawejflkasjdfl;kasd;fklawej;flkawej;flka;ejf
+//    srand(11232);
 
     // Initializing variables
     unsigned int i;
@@ -64,6 +66,19 @@ int main(int argc, char** argv){
 
     }
 
+//    proc_list[0].io_burst=3;
+//    proc_list[0].arrival=0;
+//    proc_list[0].cpu_burst=5;
+//
+//    proc_list[1].io_burst=2;
+//    proc_list[1].arrival=10;
+//    proc_list[1].cpu_burst=3;
+//
+//    proc_list[2].io_burst=3;
+//    proc_list[2].arrival=13;
+//    proc_list[2].cpu_burst=21;
+
+
     print_process_info(proc_list, num_of_proc);
 
     // Do Scheduling
@@ -82,6 +97,8 @@ int main(int argc, char** argv){
     printf("FCFS scheduling start!\n");
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
+
+    return 0;
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
