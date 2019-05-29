@@ -22,7 +22,7 @@ uint empty(Qptr);
 void enque(Qptr, Queue_Container);
 Queue_Container deque(Qptr);
 uint size(Qptr);
-Queue_Container queue_get_nth(Qptr, n);
+Queue_Container queue_get_nth(Qptr, uint);
 
 
 #endif //TERM_QUEUE_H
