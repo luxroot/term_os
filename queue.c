@@ -72,12 +72,8 @@ void enque(Qptr qptr, ProcPtr item){
 
 // Dequeue variable
 Queue_Container deque(Qptr qptr){
-    if(qptr->front == 0){
-        qptr->front = QUEUE_MAX_SIZE-1;
-        return qptr->q_list[0];
-    }
-    else{
-        (qptr->front)++;
-        return qptr->q_list[(qptr->front)-1];
-    }
+    Queue_Container var = qptr->q_list[qptr->front];
+    (qptr->front)++;
+    (qptr->front) %= QUEUE_MAX_SIZE;
+    return var;
 }

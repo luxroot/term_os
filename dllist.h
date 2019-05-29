@@ -31,6 +31,7 @@ void push_after(NodePtr, NodePtr);
 NodePtr get_front(DLLptr);
 NodePtr get_back(DLLptr);
 NodePtr get_nth(DLLptr, unsigned int);
+NodePtr get_using_proc_ptr(NodePtr, ProcPtr);
 
 NodePtr pop_front(DLLptr);
 NodePtr pop_back(DLLptr);

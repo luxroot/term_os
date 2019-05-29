@@ -63,6 +63,17 @@ int main(int argc, char** argv){
         node_list[i].value = &proc_list[i];
 
     }
+    proc_list[0].arrival=0;
+    proc_list[0].io_burst=3;
+    proc_list[0].cpu_burst=3;
+
+    proc_list[1].arrival=2;
+    proc_list[1].io_burst=3;
+    proc_list[1].cpu_burst=3;
+
+    proc_list[2].arrival=7;
+    proc_list[2].io_burst=3;
+    proc_list[2].cpu_burst=3;
 
     print_process_info(proc_list, num_of_proc);
 
@@ -82,6 +93,7 @@ int main(int argc, char** argv){
     printf("FCFS scheduling start!\n");
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
+    return;
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 

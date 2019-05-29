@@ -13,8 +13,10 @@ typedef struct _Process{
     // Changing variables
     uint waiting_time;
     uint done_time;
-    uint bursted;
+    uint cpu_bursted;
     uint quantum;
+    uint io_bursted;
+    uint first_io;
 } Process;
 
 

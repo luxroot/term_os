@@ -4,10 +4,12 @@
 #include "process.h"
 
 void process_clean(ProcPtr pc_ptr){
-    pc_ptr->bursted=0;
+    pc_ptr->cpu_bursted=0;
     pc_ptr->done_time=0;
     pc_ptr->quantum=0;
     pc_ptr->waiting_time=0;
+    pc_ptr->io_bursted=0;
+    pc_ptr->first_io=0;
 }
 
 void process_init(ProcPtr pc_ptr, uint pid){
@@ -27,7 +29,7 @@ void process_init(ProcPtr pc_ptr, uint pid){
 void print_process_info(ProcPtr proc_list, int num_of_proc){
     int i;
     for(i=0;i<num_of_proc;i++){
-        printf("pid : %-3d| arrival : %-4d| cpu_burst : %-3d| priority : %-3d\n", proc_list[i].pid, proc_list[i].arrival, proc_list[i].cpu_burst, proc_list[i].priority);
+        printf("pid : %-3d| arrival : %-4d| cpu_burst : %-3d| priority : %-3d| io_burst : %-3d\n", proc_list[i].pid, proc_list[i].arrival, proc_list[i].cpu_burst, proc_list[i].priority, proc_list[i].io_burst);
     }
     puts("");
 }

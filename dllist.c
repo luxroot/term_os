@@ -80,6 +80,19 @@ NodePtr get_nth(DLLptr dll, unsigned int index){
     return cur;
 }
 
+
+NodePtr get_using_proc_ptr(NodePtr node_list, ProcPtr pcptr){
+    uint i;
+    NodePtr value = NULL;
+    for(i=0;;i++){
+        if(node_list[i].value == pcptr){
+            value = &node_list[i];
+            break;
+        }
+    }
+    return value;
+}
+
 NodePtr pop_front(DLLptr dll){
     if(dll->nil.next == NULL)
         return NULL;
