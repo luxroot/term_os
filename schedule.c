@@ -5,11 +5,11 @@
 #include "schedule.h"
 #include "chart.h"
 
-void add_waiting_times(DLLptr wq_ptr){
+void add_waiting_times(DLLptr rdq_ptr){
     uint i=0;
     ProcPtr cur=NULL;
-    for(i=0;i<get_size(wq_ptr);i++){
-        cur = get_nth(wq_ptr, i)->value;
+    for(i=0;i<get_size(rdq_ptr);i++){
+        cur = get_nth(rdq_ptr, i)->value;
         cur->waiting_time++;
         if(cur->do_io && cur->io_burst) {
             cur->io_bursted++;
@@ -28,9 +28,9 @@ uint get_lasting_time(NodePtr nptr){
 }
 
 void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -45,7 +45,7 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -53,7 +53,7 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -62,9 +62,9 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         }
 
         // Check idle CPU & waiting job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
-            for(i=0;i<get_size(wq_ptr);i++){
-                iterator = get_nth(wq_ptr, i);
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
+            for(i=0;i<get_size(rdq_ptr);i++){
+                iterator = get_nth(rdq_ptr, i);
                 if(iterator->value->cpu_burst - iterator->value->bursted != 0 && iterator->value->do_io == 0) {
                     current_job = iterator;
                     break;
@@ -92,10 +92,10 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check FCFS has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
@@ -104,9 +104,9 @@ void do_FCFS(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
 }
 
 void do_non_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -121,7 +121,7 @@ void do_non_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_pt
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -129,7 +129,7 @@ void do_non_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_pt
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -138,15 +138,15 @@ void do_non_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_pt
         }
 
         // Check idle CPU & waiting job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
             current_job = NULL;
-            for(i=0;i<get_size(wq_ptr);i++){
-                if(!current_job && get_nth(wq_ptr, i)->value->do_io == 0){
-                    current_job = get_nth(wq_ptr, i);
+            for(i=0;i<get_size(rdq_ptr);i++){
+                if(!current_job && get_nth(rdq_ptr, i)->value->do_io == 0){
+                    current_job = get_nth(rdq_ptr, i);
                 }
-                else if( current_job && get_lasting_time(get_nth(wq_ptr, i)) < get_lasting_time(current_job) != 0 &&
-                            get_nth(wq_ptr, i)->value->do_io == 0) {
-                    current_job = get_nth(wq_ptr, i);
+                else if( current_job && get_lasting_time(get_nth(rdq_ptr, i)) < get_lasting_time(current_job) != 0 &&
+                            get_nth(rdq_ptr, i)->value->do_io == 0) {
+                    current_job = get_nth(rdq_ptr, i);
                 }
             }
             if(current_job) {
@@ -171,10 +171,10 @@ void do_non_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_pt
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check nonP_SJF has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
@@ -184,9 +184,9 @@ void do_non_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_pt
 
 
 void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -202,7 +202,7 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -211,7 +211,7 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -220,15 +220,15 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         }
 
         // Check idle CPU & waiting job -> select appropriate job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
             current_job = NULL;
-            for(i=0;i<get_size(wq_ptr);i++){
-                if(!current_job && get_nth(wq_ptr, i)->value->do_io == 0){
-                    current_job = get_nth(wq_ptr, i);
+            for(i=0;i<get_size(rdq_ptr);i++){
+                if(!current_job && get_nth(rdq_ptr, i)->value->do_io == 0){
+                    current_job = get_nth(rdq_ptr, i);
                 }
-                else if( current_job && get_lasting_time(get_nth(wq_ptr, i)) < get_lasting_time(current_job) != 0 &&
-                         get_nth(wq_ptr, i)->value->do_io == 0) {
-                    current_job = get_nth(wq_ptr, i);
+                else if( current_job && get_lasting_time(get_nth(rdq_ptr, i)) < get_lasting_time(current_job) != 0 &&
+                         get_nth(rdq_ptr, i)->value->do_io == 0) {
+                    current_job = get_nth(rdq_ptr, i);
                 }
             }
             if(current_job) {
@@ -237,13 +237,13 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
             }
         }
         // Check current working process & waiting job -> find shorter job
-        else if (current_job != NULL && get_size(wq_ptr) != 0) {
-            new_job = get_front(wq_ptr);
+        else if (current_job != NULL && get_size(rdq_ptr) != 0) {
+            new_job = get_front(rdq_ptr);
             unsigned int min_idx = 0;
-            for(i=0;i<get_size(wq_ptr);i++){
+            for(i=0;i<get_size(rdq_ptr);i++){
                 // Select minimum cpu_burst job
-                if(get_lasting_time(get_nth(wq_ptr, i)) < get_lasting_time(new_job)){
-                    new_job = get_nth(wq_ptr, i);
+                if(get_lasting_time(get_nth(rdq_ptr, i)) < get_lasting_time(new_job)){
+                    new_job = get_nth(rdq_ptr, i);
                     min_idx = i;
                 }
             }
@@ -251,8 +251,8 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
-                pop_nth(wq_ptr, min_idx);
-                push_back(wq_ptr, current_job);
+                pop_nth(rdq_ptr, min_idx);
+                push_back(rdq_ptr, current_job);
                 current_job = new_job;
                 chart_ptr->start[chart_index] = current_time;
             }
@@ -274,10 +274,10 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check P_SJF has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
@@ -287,9 +287,9 @@ void do_preemptive_SFJ(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
 
 
 void do_non_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -304,7 +304,7 @@ void do_non_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr cha
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -312,7 +312,7 @@ void do_non_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr cha
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -321,15 +321,15 @@ void do_non_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr cha
         }
 
         // Check idle CPU & waiting job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
             current_job = NULL;
-            for(i=0;i<get_size(wq_ptr);i++){
-                if(!current_job && get_nth(wq_ptr, i)->value->do_io == 0){
-                    current_job = get_nth(wq_ptr, i);
+            for(i=0;i<get_size(rdq_ptr);i++){
+                if(!current_job && get_nth(rdq_ptr, i)->value->do_io == 0){
+                    current_job = get_nth(rdq_ptr, i);
                 }
-                else if( current_job && get_nth(wq_ptr, i)->value->priority < current_job->value->priority &&
-                         get_nth(wq_ptr, i)->value->do_io == 0) {
-                    current_job = get_nth(wq_ptr, i);
+                else if( current_job && get_nth(rdq_ptr, i)->value->priority < current_job->value->priority &&
+                         get_nth(rdq_ptr, i)->value->do_io == 0) {
+                    current_job = get_nth(rdq_ptr, i);
                 }
             }
             if(current_job) {
@@ -354,10 +354,10 @@ void do_non_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr cha
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check nonP_priority has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
@@ -367,9 +367,9 @@ void do_non_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr cha
 
 
 void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -385,7 +385,7 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -393,7 +393,7 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -402,15 +402,15 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
         }
 
         // Check idle CPU & waiting job -> select appropriate job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
             current_job = NULL;
-            for(i=0;i<get_size(wq_ptr);i++){
-                if(!current_job && get_nth(wq_ptr, i)->value->do_io == 0){
-                    current_job = get_nth(wq_ptr, i);
+            for(i=0;i<get_size(rdq_ptr);i++){
+                if(!current_job && get_nth(rdq_ptr, i)->value->do_io == 0){
+                    current_job = get_nth(rdq_ptr, i);
                 }
-                else if( current_job && get_nth(wq_ptr, i)->value->priority < current_job->value->priority &&
-                         get_nth(wq_ptr, i)->value->do_io == 0) {
-                    current_job = get_nth(wq_ptr, i);
+                else if( current_job && get_nth(rdq_ptr, i)->value->priority < current_job->value->priority &&
+                         get_nth(rdq_ptr, i)->value->do_io == 0) {
+                    current_job = get_nth(rdq_ptr, i);
                 }
             }
             if(current_job) {
@@ -419,13 +419,13 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
             }
         }
             // Check current working process & waiting job -> find shorter job
-        else if (current_job != NULL && get_size(wq_ptr) != 0) {
-            new_job = get_front(wq_ptr);
+        else if (current_job != NULL && get_size(rdq_ptr) != 0) {
+            new_job = get_front(rdq_ptr);
             unsigned int min_idx = 0;
-            for(i=0;i<get_size(wq_ptr);i++){
+            for(i=0;i<get_size(rdq_ptr);i++){
                 // Select minimum cpu_burst job
-                if(get_nth(wq_ptr, i)->value->priority < new_job->value->priority){
-                    new_job = get_nth(wq_ptr, i);
+                if(get_nth(rdq_ptr, i)->value->priority < new_job->value->priority){
+                    new_job = get_nth(rdq_ptr, i);
                     min_idx = i;
                 }
             }
@@ -433,8 +433,8 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
-                pop_nth(wq_ptr, min_idx);
-                push_back(wq_ptr, current_job);
+                pop_nth(rdq_ptr, min_idx);
+                push_back(rdq_ptr, current_job);
                 current_job = new_job;
                 chart_ptr->start[chart_index] = current_time;
             }
@@ -456,10 +456,10 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check P_priority has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
@@ -469,9 +469,9 @@ void do_preemptive_priority(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
 
 
 void do_round_robin(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr, uint time_quantum){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -486,7 +486,7 @@ void do_round_robin(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr, uint
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -494,7 +494,7 @@ void do_round_robin(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr, uint
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -503,9 +503,9 @@ void do_round_robin(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr, uint
         }
 
         // Check idle CPU & waiting job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
-            current_job = get_front(wq_ptr);
-            pop_front(wq_ptr);
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
+            current_job = get_front(rdq_ptr);
+            pop_front(rdq_ptr);
             chart_ptr->start[chart_index] = current_time;
         }
 
@@ -524,11 +524,11 @@ void do_round_robin(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr, uint
                 chart_index++;
                 current_job = NULL;
             }
-            else if (current_job->value->quantum >= time_quantum && get_size(wq_ptr) > 0){
+            else if (current_job->value->quantum >= time_quantum && get_size(rdq_ptr) > 0){
                 current_job->value->quantum = 0;
                 if(current_job->value->io_burst)
                     current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -536,10 +536,10 @@ void do_round_robin(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr, uint
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check RR has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
@@ -563,9 +563,9 @@ int is_higher_HRRN(NodePtr a, NodePtr b){
 
 
 void do_non_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -580,7 +580,7 @@ void do_non_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -588,7 +588,7 @@ void do_non_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -597,15 +597,15 @@ void do_non_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
         }
 
         // Check idle CPU & waiting job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
             current_job = NULL;
-            for(i=0;i<get_size(wq_ptr);i++){
-                if(!current_job && get_nth(wq_ptr, i)->value->do_io == 0){
-                    current_job = get_nth(wq_ptr, i);
+            for(i=0;i<get_size(rdq_ptr);i++){
+                if(!current_job && get_nth(rdq_ptr, i)->value->do_io == 0){
+                    current_job = get_nth(rdq_ptr, i);
                 }
-                else if( current_job && is_higher_HRRN(get_nth(wq_ptr, i), current_job) &&
-                         get_nth(wq_ptr, i)->value->do_io == 0) {
-                    current_job = get_nth(wq_ptr, i);
+                else if( current_job && is_higher_HRRN(get_nth(rdq_ptr, i), current_job) &&
+                         get_nth(rdq_ptr, i)->value->do_io == 0) {
+                    current_job = get_nth(rdq_ptr, i);
                 }
             }
             if(current_job) {
@@ -630,10 +630,10 @@ void do_non_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check nonP_HRRN has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
@@ -643,9 +643,9 @@ void do_non_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_p
 
 
 void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
-    DLList waiting_queue;
-    DLLptr wq_ptr = &waiting_queue;
-    DLList_init(wq_ptr);
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
 
     NodePtr node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
 
@@ -661,7 +661,7 @@ void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         for(i=0;i<get_size(job_queue);i++) {
             if (get_nth(job_queue, i)->value->arrival == current_time) {
                 node_list[node_index].value = get_nth(job_queue, i)->value;
-                push_back(wq_ptr, &node_list[node_index++]);
+                push_back(rdq_ptr, &node_list[node_index++]);
                 pop_nth(job_queue, i--);
             }
         }
@@ -669,7 +669,7 @@ void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         if(current_job && current_job->value->io_burst - current_job->value->io_bursted){
             if(current_job->value->cpu_burst - current_job->value->bursted == 1 || rand()%3 == 0){
                 current_job->value->do_io = 1;
-                push_back(wq_ptr, current_job);
+                push_back(rdq_ptr, current_job);
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
@@ -678,15 +678,15 @@ void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
         }
 
         // Check idle CPU & waiting job -> select appropriate job
-        if (current_job == NULL && get_size(wq_ptr) != 0) {
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
             current_job = NULL;
-            for(i=0;i<get_size(wq_ptr);i++){
-                if(!current_job && get_nth(wq_ptr, i)->value->do_io == 0){
-                    current_job = get_nth(wq_ptr, i);
+            for(i=0;i<get_size(rdq_ptr);i++){
+                if(!current_job && get_nth(rdq_ptr, i)->value->do_io == 0){
+                    current_job = get_nth(rdq_ptr, i);
                 }
-                else if( current_job && is_higher_HRRN(get_nth(wq_ptr, i), current_job) &&
-                         get_nth(wq_ptr, i)->value->do_io == 0) {
-                    current_job = get_nth(wq_ptr, i);
+                else if( current_job && is_higher_HRRN(get_nth(rdq_ptr, i), current_job) &&
+                         get_nth(rdq_ptr, i)->value->do_io == 0) {
+                    current_job = get_nth(rdq_ptr, i);
                 }
             }
             if(current_job) {
@@ -695,13 +695,13 @@ void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
             }
         }
             // Check current working process & waiting job -> find shorter job
-        else if (current_job != NULL && get_size(wq_ptr) != 0) {
-            new_job = get_front(wq_ptr);
+        else if (current_job != NULL && get_size(rdq_ptr) != 0) {
+            new_job = get_front(rdq_ptr);
             unsigned int min_idx = 0;
-            for(i=0;i<get_size(wq_ptr);i++){
+            for(i=0;i<get_size(rdq_ptr);i++){
                 // Select minimum cpu_burst job
-                if(is_higher_HRRN(get_nth(wq_ptr, i), new_job)){
-                    new_job = get_nth(wq_ptr, i);
+                if(is_higher_HRRN(get_nth(rdq_ptr, i), new_job)){
+                    new_job = get_nth(rdq_ptr, i);
                     min_idx = i;
                 }
             }
@@ -709,8 +709,8 @@ void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
                 chart_ptr->processes[chart_index] = current_job->value->pid;
                 chart_ptr->end[chart_index] = current_time;
                 chart_index++;
-                pop_nth(wq_ptr, min_idx);
-                push_back(wq_ptr, current_job);
+                pop_nth(rdq_ptr, min_idx);
+                push_back(rdq_ptr, current_job);
                 current_job = new_job;
                 chart_ptr->start[chart_index] = current_time;
             }
@@ -732,10 +732,10 @@ void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
             }
         }
 
-        add_waiting_times(wq_ptr);
+        add_waiting_times(rdq_ptr);
 
         // Check P_HRRN has ended
-        if(get_size(job_queue) == 0 && get_size(wq_ptr)==0 && current_job == NULL)
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
             break;
     }
 
