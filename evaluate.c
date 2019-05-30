@@ -41,7 +41,8 @@ void print_evaluation(uint num_of_proc, ProcPtr proc_list, ChartPtr chart_ptr){
     printf("Total / Average Turnaround Time : %lld / %lf\n", total_turnaround_time, average_turnaround_time);
     printf("Total / Average Waiting Time : %lld / %lf\n", total_waiting_time, average_waiting_time);
     printf("Total / Average Response Time : %lld / %lf\n", total_response_time, average_response_time);
-    printf("Context Switches / Percentage to Waiting Time : %d / %lf%%\n", context_switches, (double)context_switches/(context_switches+10*total_waiting_time)*100);
+    printf("Context Switches / Percentage to Waiting Time : %d / %lf%%\n", context_switches,
+            (double)context_switches/(context_switches+10*total_waiting_time)*100);
     printf("(Assumed that context switching has cost of 0.1\n\n");
 
     // free dynamically allocated variables

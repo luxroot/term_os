@@ -37,8 +37,6 @@ int main(int argc, char** argv){
     read(rnd_fd, &rnd, sizeof(unsigned int));
     srand(rnd);
     close(rnd_fd);
-    //sfaweklfjalksfjlaskdjflawejkflkawejflkasjdfl;kasd;fklawej;flkawej;flka;ejf
-//    srand(11232);
 
     // Initializing variables
     unsigned int i;
@@ -98,7 +96,6 @@ int main(int argc, char** argv){
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
 
-    return 0;
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -115,6 +112,7 @@ int main(int argc, char** argv){
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
 
+
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     for(i=0;i<num_of_proc;i++){
@@ -129,6 +127,7 @@ int main(int argc, char** argv){
 
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -174,6 +173,7 @@ int main(int argc, char** argv){
 
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
