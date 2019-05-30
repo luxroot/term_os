@@ -15,5 +15,6 @@ void do_preemptive_priority(uint , DLLptr , ChartPtr);
 void do_round_robin(uint, DLLptr, ChartPtr, uint);
 void do_non_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr);
 void do_preemptive_HRRN(uint , DLLptr , ChartPtr);
+void do_preemptive_HRRN_atomic(uint , DLLptr , ChartPtr);
 
 #endif //TERM_SCHEDULE_H

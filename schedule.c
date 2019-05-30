@@ -742,3 +742,97 @@ void do_preemptive_HRRN(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
     // Free dynamically allocated variable
     free(node_list);
 }
+
+int is_higher_HRRN_atomic(NodePtr a, NodePtr b){
+    if((int)get_HRRN_priority(a) > (int)get_HRRN_priority(b))
+        return 1;
+    else
+        return 0;
+}
+
+void do_preemptive_HRRN_atomic(uint num_of_proc, DLLptr job_queue, ChartPtr chart_ptr){
+    DLList ready_queue;
+    DLLptr rdq_ptr = &ready_queue;
+    DLList_init(rdq_ptr);
+
+    NodePtr rd_queue_node_list = (NodePtr) malloc(sizeof(Node) * num_of_proc);
+
+    NodePtr current_job = NULL;
+    NodePtr new_job = NULL;
+    uint current_time=0;
+    uint i=0;
+    uint chart_index = 0;
+    uint node_index = 0;
+
+    while(1){
+        // Push arrived tasks into waiting queue
+        for(i=0;i<get_size(job_queue);i++) {
+            if (get_nth(job_queue, i)->value->arrival == current_time) {
+                rd_queue_node_list[node_index].value = get_nth(job_queue, i)->value;
+                push_back(rdq_ptr, &rd_queue_node_list[node_index++]);
+                pop_nth(job_queue, i--);
+            }
+        }
+
+        // Check idle CPU & waiting job -> select appropriate job
+        if (current_job == NULL && get_size(rdq_ptr) != 0) {
+            current_job = get_front(rdq_ptr);
+            unsigned int min_idx = 0;
+            for(i=0;i<get_size(rdq_ptr);i++){
+                // Select Highest HRRN priority job
+                if(is_higher_HRRN_atomic(get_nth(rdq_ptr, i), current_job)){
+                    current_job = get_nth(rdq_ptr, i);
+                    min_idx = i;
+                }
+            }
+            pop_nth(rdq_ptr, min_idx);
+            chart_ptr->start[chart_index] = current_time;
+        }
+            // Check current working process & waiting job -> find shorter job
+        else if (current_job != NULL && get_size(rdq_ptr) != 0) {
+            new_job = get_front(rdq_ptr);
+            unsigned int min_idx = 0;
+            for(i=0;i<get_size(rdq_ptr);i++){
+                // Select minimum cpu_burst job
+                if(is_higher_HRRN_atomic(get_nth(rdq_ptr, i), new_job)){
+                    new_job = get_nth(rdq_ptr, i);
+                    min_idx = i;
+                }
+            }
+            if(current_job->value != new_job->value && is_higher_HRRN_atomic(new_job, current_job)){
+                chart_ptr->processes[chart_index] = current_job->value->pid;
+                chart_ptr->end[chart_index] = current_time;
+                chart_index++;
+                pop_nth(rdq_ptr, min_idx);
+                push_back(rdq_ptr, current_job);
+                current_job = new_job;
+                chart_ptr->start[chart_index] = current_time;
+            }
+        }
+
+        current_time++;
+
+        // Check busy CPU
+        if(current_job != NULL) {
+            current_job->value->bursted++;
+
+            // Check done
+            if (current_job->value->bursted == current_job->value->cpu_burst) {
+                current_job->value->done_time = current_time;
+                chart_ptr->processes[chart_index] = current_job->value->pid;
+                chart_ptr->end[chart_index] = current_time;
+                chart_index++;
+                current_job = NULL;
+            }
+        }
+
+        add_waiting_times(rdq_ptr);
+
+        // Check P_HRRN has ended
+        if(get_size(job_queue) == 0 && get_size(rdq_ptr)==0 && current_job == NULL)
+            break;
+    }
+
+    // Free dynamically allocated variable
+    free(rd_queue_node_list);
+}
