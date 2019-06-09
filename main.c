@@ -56,8 +56,8 @@ int main(int argc, char** argv){
     for(i=0;i<num_of_proc;i++){
         // initialize with random variable, and pid of i (these variables must be constant after init)
         process_init(&proc_list[i], i+1);
-	if(arrival_weight)
-	        proc_list[i].arrival += rand() % (num_of_proc * arrival_weight);
+        if(arrival_weight)
+            proc_list[i].arrival += rand() % (num_of_proc * arrival_weight);
 
         // put Process pointer into node_list
         node_list[i].value = &proc_list[i];
