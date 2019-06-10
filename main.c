@@ -220,6 +220,36 @@ int main(int argc, char** argv){
     drawChart(&chart, print_lines);
     print_evaluation(num_of_proc, proc_list, &chart);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    for(i=0;i<num_of_proc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&proc_list[i]);
+        push_back(jobs, &node_list[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    printf("Custom Priority scheduling start!\n");
+    do_custom_priority(num_of_proc, jobs, &chart);
+
+    drawChart(&chart, print_lines);
+    print_evaluation(num_of_proc, proc_list, &chart);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    for(i=0;i<num_of_proc;i++){
+        // initialize changing variables (these variables changes with scheduling algorithm)
+        process_clean(&proc_list[i]);
+        push_back(jobs, &node_list[i]);
+    }
+    memset(&chart, 0, sizeof(chart));
+
+    printf("Dynamic Priority scheduling start!\n");
+    do_dynamic_priority(num_of_proc, jobs, &chart);
+
+    drawChart(&chart, print_lines);
+    print_evaluation(num_of_proc, proc_list, &chart);
+
     // Freeing dynamic allocated variables
     free(proc_list);
     free(node_list);
